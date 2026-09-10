@@ -71,9 +71,9 @@ export default function CommandMenu({
       items: [
         { label: 'Deploy New Campaign Run ($45 Growth Plan)', action: () => { onClose(); onOpenBooking('Growth Promotion ($45)'); }, icon: Zap },
         {
-          label: copied ? '✓ Copied fardin@fardintareque.com' : 'Copy Direct Contact Email (fardin@fardintareque.com)',
+          label: copied ? '✓ Copied contact@fardintareque.com' : 'Copy Direct Contact Email (contact@fardintareque.com)',
           action: () => {
-            navigator.clipboard.writeText('fardin@fardintareque.com');
+            navigator.clipboard.writeText('contact@fardintareque.com');
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
           },
