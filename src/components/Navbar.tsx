@@ -181,7 +181,7 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
             Start Campaign Now →
           </button>
           <a
-            href="mailto:fardin@fardintareque.com"
+            href="mailto:contact@fardintareque.com"
             className="block text-center w-full py-2.5 rounded-full border border-white/10 text-slate-300 text-xs font-mono hover:bg-white/5"
           >
             fardin@fardintareque.com
