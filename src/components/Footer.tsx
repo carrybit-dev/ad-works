@@ -11,7 +11,7 @@ export default function Footer({ onOpenBooking }: FooterProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText('fardin@fardintareque.com');
+    navigator.clipboard.writeText('contact@fardintareque.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
   };
