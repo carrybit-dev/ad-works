@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+:root {
+  --background: #04070E;
+  --foreground: #F8FAFC;
+  --neon-coral: #FF4229;
+  --neon-emerald: #10B981;
+  --neon-cyan: #06B6D4;
+  --neon-indigo: #6366F1;
+}
+
+body {
+  background-color: #04070E;
+  color: #F8FAFC;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(1200px 700px at 15% -10%, rgba(255, 66, 41, 0.16), transparent 60%),
+    radial-gradient(900px 600px at 85% 15%, rgba(16, 185, 129, 0.12), transparent 55%),
+    radial-gradient(1000px 700px at 50% 65%, rgba(99, 102, 241, 0.10), transparent 60%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: #FF4229;
+  color: #ffffff;
+}
+
+/* High-Tech Cyber Grid */
+.cyber-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 85% 65% at 50% 35%, black 40%, transparent 95%);
+}
+
+/* Radar & Scanner Animations */
+@keyframes radarSweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes laserScan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(1000%); opacity: 0; }
+}
+
+@keyframes terminalBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-radar {
+  animation: radarSweep 8s linear infinite;
+}
+
+.animate-scanline {
+  animation: laserScan 2.5s ease-in-out infinite;
+}
+
+.animate-blink {
+  animation: terminalBlink 1s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Neon Gradient Glows */
+.glow-coral {
+  box-shadow: 0 0 35px -5px rgba(255, 66, 41, 0.45);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.45);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.45);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #07090E;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 66, 41, 0.6);
+}
