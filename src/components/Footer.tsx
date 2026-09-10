@@ -91,8 +91,8 @@ export default function Footer({ onOpenBooking }: FooterProps) {
             <ul className="space-y-2.5 text-xs text-slate-400">
               <li className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#FF7A50]" />
-                <a href="mailto:fardin@fardintareque.com" className="text-white hover:underline">
-                  fardin@fardintareque.com
+                <a href="mailto:contact@fardintareque.com" className="text-white hover:underline">
+                  contact@fardintareque.com
                 </a>
               </li>
               <li>Website: <span className="text-slate-300">fardintareque.com</span></li>
