@@ -49,7 +49,7 @@ export default function Hero({ onOpenBooking }: HeroProps) {
                 href="#proofs"
                 className="flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-base hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-md"
               >
-                <span>See 16 Real Proofs</span>
+                <span>See Recent Real Proofs</span>
               </a>
             </div>
 
