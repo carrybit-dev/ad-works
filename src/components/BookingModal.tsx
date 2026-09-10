@@ -88,7 +88,7 @@ export default function BookingModal({
       `Notes: ${confirmedCampaign.notes || 'None'}\n\n` +
       `Please let me know the next steps for ad deployment.\n`
     );
-    window.location.href = `mailto:fardin@fardintareque.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:contact@fardintareque.com?subject=${subject}&body=${body}`;
   };
 
   return (
