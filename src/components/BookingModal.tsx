@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, ArrowRight, Sparkles, Mail, Copy, Check } from 'lucide-react';
-import { CampaignBooking } from '@/types';
+import { X, CheckCircle2, Sparkles, Mail, Copy, Check } from 'lucide-react';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -20,7 +19,13 @@ export default function BookingModal({
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [confirmedCampaign, setConfirmedCampaign] = useState<CampaignBooking | null>(null);
+  const [confirmedCampaign, setConfirmedCampaign] = useState<{
+    id: string;
+    videoUrl: string;
+    packageName: string;
+    targetViews: number;
+    notes?: string;
+  } | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -46,22 +51,49 @@ export default function BookingModal({
     setError('');
     setLoading(true);
 
+    // 1. Order ID generate (e.g. FAW-49215)
+    const newOrderId = `FAW-${Math.floor(10000 + Math.random() * 90000)}`;
+
+    // 2. Package onujayi Target Views calculate
+    let target = 2500;
+    if (selectedPkg.includes('Starter')) target = 1000;
+    else if (selectedPkg.includes('Growth')) target = 2500;
+    else if (selectedPkg.includes('Advanced')) target = 8000;
+    else if (selectedPkg.includes('Custom')) target = 20000;
+
     try {
-      const res = await fetch('/api/campaigns', {
+      // 3. Direct SheetDB API-te browser theke POST
+      const res = await fetch('https://sheetdb.io/api/v1/nxbc1gqqb06xi', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          videoUrl,
-          packageName: selectedPkg,
-          notes,
+          data: [
+            {
+              orderId: newOrderId,
+              videoUrl: videoUrl.trim(),
+              status: 'ACTIVE',
+              targetViews: target,
+              viewsDelivered: 0,
+              progressPercentage: 0,
+              attribution: 'In-Feed Google Ads (70%) • Audience Matching (30%)',
+            },
+          ],
         }),
       });
 
-      const data = await res.json();
-      if (data.success) {
-        setConfirmedCampaign(data.campaign);
+      if (res.ok) {
+        setConfirmedCampaign({
+          id: newOrderId,
+          videoUrl,
+          packageName: selectedPkg,
+          targetViews: target,
+          notes,
+        });
       } else {
-        setError(data.error || 'Failed to submit campaign request.');
+        setError('Failed to record order. Please try again or reach out directly.');
       }
     } catch {
       setError('Connection error. Please try again.');
