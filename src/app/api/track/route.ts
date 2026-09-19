@@ -2,77 +2,68 @@ import { NextResponse } from 'next/server';
 
 const SHEETDB_URL = 'https://sheetdb.io/api/v1/nxbc1gqqb06xi';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const query = (searchParams.get('id') || searchParams.get('url') || '').trim();
-
-  if (!query) {
-    return NextResponse.json(
-      { success: false, error: 'Please provide an Order ID (e.g. FAW-94821) or YouTube Video URL to track.' },
-      { status: 400 }
-    );
-  }
-
+export async function POST(request: Request) {
   try {
-    // 1. Google Sheet theke orderId diye search
-    const res = await fetch(`${SHEETDB_URL}/search?orderId=${encodeURIComponent(query)}`, {
-      cache: 'no-store' // Always real-time fresh data
+    const body = await request.json();
+    const { videoUrl, packageName, notes } = body;
+
+    if (!videoUrl) {
+      return NextResponse.json(
+        { success: false, error: 'YouTube Video URL is required.' },
+        { status: 400 }
+      );
+    }
+
+    // 1. Random Unique Order ID generate kora (e.g. FAW-62491)
+    const orderId = `FAW-${Math.floor(10000 + Math.random() * 90000)}`;
+
+    // 2. Package onujayi Target Views set kora
+    let targetViews = 2500;
+    if (packageName?.includes('Starter')) targetViews = 1000;
+    else if (packageName?.includes('Growth')) targetViews = 2500;
+    else if (packageName?.includes('Advanced')) targetViews = 8000;
+    else if (packageName?.includes('Custom')) targetViews = 20000;
+
+    // 3. SheetDB-te Notun Row Insert kora
+    const sheetData = {
+      orderId: orderId,
+      videoUrl: videoUrl,
+      status: 'ACTIVE',
+      targetViews: targetViews,
+      viewsDelivered: 0,
+      progressPercentage: 0,
+      attribution: 'In-Feed Google Ads (70%) • Audience Matching (30%)'
+    };
+
+    const sheetRes = await fetch(SHEETDB_URL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: [sheetData] })
     });
-    let data = await res.json();
 
-    // 2. Jodi orderId te na paowa jay, videoUrl diye search
-    if (!data || !Array.isArray(data) || data.length === 0) {
-      const urlRes = await fetch(`${SHEETDB_URL}/search?videoUrl=${encodeURIComponent(query)}`, {
-        cache: 'no-store'
-      });
-      data = await urlRes.json();
+    if (!sheetRes.ok) {
+      console.error('SheetDB post failed:', await sheetRes.text());
     }
 
-    if (!data || !Array.isArray(data) || data.length === 0) {
-      return NextResponse.json({
-        success: false,
-        error: `No active campaign found matching "${query}". Please verify your Order ID or URL.`
-      });
-    }
-
-    const row = data[0];
-
-    // Numbers & clean parsing (handles formatting like 5,000 or 48%)
-    const target = Number(String(row.targetViews || '0').replace(/[^0-9]/g, '')) || 5000;
-    const delivered = Number(String(row.viewsDelivered || '0').replace(/[^0-9]/g, '')) || 0;
-    
-    let progress = 0;
-    if (row.progressPercentage) {
-      progress = Number(String(row.progressPercentage).replace(/[^0-9]/g, '')) || 0;
-    } else {
-      progress = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
-    }
-
-    const currentStatus = (row.status || 'ACTIVE').toUpperCase();
-    const isCompleted = currentStatus === 'COMPLETED' || progress >= 100;
-
+    // 4. Client-ke confirmed response pathano
     return NextResponse.json({
       success: true,
-      trackingResult: {
-        orderId: row.orderId || query,
-        videoUrl: row.videoUrl || '',
-        status: currentStatus,
-        progressPercentage: progress,
-        viewsDelivered: delivered,
-        targetViews: target,
-        retentionRate: '58.4%',
-        attribution: row.attribution || 'In-Feed Google Ads (64%) • Browse Features (24%)',
-        stages: [
-          { name: '1. Video & Metadata Audit', status: 'done', date: 'Day 1' },
-          { name: '2. High-Intent In-Feed Google Ads Setup', status: 'done', date: 'Day 1' },
-          { name: '3. Algorithmic Recommendation Trigger', status: progress >= 40 ? 'done' : 'in_progress', date: 'Days 2-5' },
-          { name: '4. Final Studio Analytics Audit Report', status: isCompleted ? 'done' : 'pending', date: 'Day 7' }
-        ]
+      campaign: {
+        id: orderId,
+        videoUrl: videoUrl,
+        packageName: packageName,
+        targetViews: targetViews,
+        status: 'ACTIVE',
+        notes: notes || ''
       }
     });
   } catch (error) {
+    console.error('Campaign creation error:', error);
     return NextResponse.json(
-      { success: false, error: 'Unable to connect to live tracking database. Please try again later.' },
+      { success: false, error: 'Internal server error. Could not book campaign.' },
       { status: 500 }
     );
   }
