@@ -146,7 +146,7 @@ export default function CampaignTracker() {
             <button
               type="button"
               onClick={() => handleSample('FAW-83912')}
-              className="px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-amber-400 border border-white/10"
+              className="px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-blue-400 border border-white/10"
             >
               FAW-83912 (Active)
             </button>
@@ -162,13 +162,12 @@ export default function CampaignTracker() {
           {result && (
             <div className="mt-8 pt-6 border-t border-white/10 space-y-6 animate-fadeIn">
               
-              {/* Order Status Notice if Pending */}
               {result.isPending && (
                 <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                   <div className="text-xs text-amber-200 leading-relaxed">
                     <strong className="text-amber-300 block mb-1 font-semibold text-sm">Order Under Review (Pending Confirmation)</strong>
-                    Your campaign intake has been received. Our team is auditing channel suitability and configuring target Google Ads parameters. Once payment & intake are approved, status will switch to <strong>ACTIVE</strong> and pacing will begin.
+                    Your campaign intake has been received. Our team is auditing channel suitability and configuring target Google Ads parameters. Once payment & intake are confirmed, status will switch to <strong>ACTIVE</strong> and pacing will begin.
                   </div>
                 </div>
               )}
@@ -184,7 +183,7 @@ export default function CampaignTracker() {
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                       : result.status === 'PENDING'
                       ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse'
-                      : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                      : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
                   }`}>
                     {result.status === 'PENDING' ? 'PENDING APPROVAL' : result.status}
                   </span>
