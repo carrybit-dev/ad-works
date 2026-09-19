@@ -51,10 +51,8 @@ export default function BookingModal({
     setError('');
     setLoading(true);
 
-    // 1. Order ID generate (e.g. FAW-49215)
     const newOrderId = `FAW-${Math.floor(10000 + Math.random() * 90000)}`;
 
-    // 2. Package onujayi Target Views calculate
     let target = 2500;
     if (selectedPkg.includes('Starter')) target = 1000;
     else if (selectedPkg.includes('Growth')) target = 2500;
@@ -62,7 +60,6 @@ export default function BookingModal({
     else if (selectedPkg.includes('Custom')) target = 20000;
 
     try {
-      // 3. Direct SheetDB API-te browser theke POST
       const res = await fetch('https://sheetdb.io/api/v1/nxbc1gqqb06xi', {
         method: 'POST',
         headers: {
@@ -74,11 +71,11 @@ export default function BookingModal({
             {
               orderId: newOrderId,
               videoUrl: videoUrl.trim(),
-              status: 'ACTIVE',
+              status: 'PENDING', // <-- Default status PENDING
               targetViews: target,
               viewsDelivered: 0,
               progressPercentage: 0,
-              attribution: 'In-Feed Google Ads (70%) • Audience Matching (30%)',
+              attribution: 'In Intake Queue • Awaiting Compliance Audit',
             },
           ],
         }),
@@ -118,7 +115,7 @@ export default function BookingModal({
       `Package: ${confirmedCampaign.packageName}\n` +
       `Video Link: ${confirmedCampaign.videoUrl}\n` +
       `Notes: ${confirmedCampaign.notes || 'None'}\n\n` +
-      `Please let me know the next steps for ad deployment.\n`
+      `Please confirm my campaign and send the payment/invoice instructions.\n`
     );
     window.location.href = `mailto:contact@fardintareque.com?subject=${subject}&body=${body}`;
   };
@@ -216,19 +213,19 @@ export default function BookingModal({
           </div>
         ) : (
           <div className="text-center py-4 space-y-4 animate-fadeIn">
-            <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
+            <div className="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto border border-amber-500/30">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <h3 className="text-2xl font-bold text-white">Campaign Initiated!</h3>
+            <h3 className="text-2xl font-bold text-white">Campaign Intake Received!</h3>
             <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto">
-              Your video has been recorded into our intake queue. Here is your tracking reference:
+              Your video has entered the intake queue. Your order is currently <span className="text-amber-400 font-semibold">Pending Review</span> until setup confirmation:
             </p>
 
             <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
               <div>
                 <div className="text-[10px] font-mono text-slate-400 uppercase">Order ID</div>
-                <div className="font-mono text-xl font-extrabold text-emerald-400">
+                <div className="font-mono text-xl font-extrabold text-[#FFA58A]">
                   {confirmedCampaign.id}
                 </div>
               </div>
@@ -242,8 +239,9 @@ export default function BookingModal({
             </div>
 
             <div className="text-xs font-mono text-slate-400 text-left space-y-1 p-3 rounded-xl bg-black/30">
+              <div>Status: <span className="text-amber-400 font-bold">Pending Setup Confirmation</span></div>
               <div>Package: <span className="text-white">{confirmedCampaign.packageName}</span></div>
-              <div>Estimated Target: <span className="text-emerald-400 font-bold">~{confirmedCampaign.targetViews.toLocaleString()} Real Views</span></div>
+              <div>Target: <span className="text-slate-200 font-bold">~{confirmedCampaign.targetViews.toLocaleString()} Views</span></div>
             </div>
 
             <div className="flex flex-col gap-2 pt-2">
@@ -252,7 +250,7 @@ export default function BookingModal({
                 className="w-full py-3 rounded-full bg-gradient-to-r from-[#FF4229] to-[#FF7A50] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg"
               >
                 <Mail className="w-4 h-4" />
-                <span>Confirm Via Direct Email</span>
+                <span>Confirm & Send Details Via Email</span>
               </button>
               <button
                 onClick={onClose}
