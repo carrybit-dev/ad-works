@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, CheckCircle2, Clock, Activity } from 'lucide-react';
+import { Search, CheckCircle2, Clock, Activity, AlertCircle } from 'lucide-react';
 
 const SHEETDB_URL = 'https://sheetdb.io/api/v1/nxbc1gqqb06xi';
 
@@ -22,18 +22,16 @@ export default function CampaignTracker() {
     setResult(null);
 
     try {
-      // 1. SheetDB theke orderId diye direct browser fetch
       let res = await fetch(`${SHEETDB_URL}/search?orderId=${encodeURIComponent(cleanQuery)}`);
       let data = await res.json();
 
-      // 2. Jodi orderId match na kore, videoUrl check korbe
       if (!data || !Array.isArray(data) || data.length === 0) {
         res = await fetch(`${SHEETDB_URL}/search?videoUrl=${encodeURIComponent(cleanQuery)}`);
         data = await res.json();
       }
 
       if (!data || !Array.isArray(data) || data.length === 0) {
-        setError('No active campaign found for this ID or video link.');
+        setError('No campaign found for this Order ID or video URL.');
         return;
       }
 
@@ -48,21 +46,41 @@ export default function CampaignTracker() {
         progress = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
       }
 
-      const status = (row.status || 'ACTIVE').toUpperCase();
-      const isCompleted = status === 'COMPLETED' || progress >= 100;
+      const rawStatus = (row.status || 'PENDING').toUpperCase();
+      const isPending = rawStatus.includes('PEND');
+      const isCompleted = rawStatus === 'COMPLETED' || progress >= 100;
 
       setResult({
         orderId: row.orderId || cleanQuery,
-        status: status,
+        status: isPending ? 'PENDING' : (isCompleted ? 'COMPLETED' : 'ACTIVE'),
+        isPending,
         targetViews: target,
         viewsDelivered: delivered,
         progressPercentage: progress,
-        attribution: row.attribution || 'In-Feed Google Ads (70%) • Audience Matching (30%)',
+        attribution: isPending
+          ? 'Intake verification in progress • Awaiting manual confirmation'
+          : (row.attribution || 'In-Feed Google Ads (70%) • Audience Matching (30%)'),
         stages: [
-          { name: '1. Video & Metadata Audit', status: 'done', date: 'Day 1' },
-          { name: '2. High-Intent In-Feed Google Ads Setup', status: 'done', date: 'Day 1' },
-          { name: '3. Algorithmic Recommendation Trigger', status: progress >= 40 ? 'done' : 'in_progress', date: 'Days 2-5' },
-          { name: '4. Final Studio Analytics Audit Report', status: isCompleted ? 'done' : 'pending', date: 'Day 7' },
+          { 
+            name: '1. Video & Compliance Audit', 
+            status: isPending ? 'in_progress' : 'done', 
+            date: isPending ? 'In Review' : 'Day 1' 
+          },
+          { 
+            name: '2. High-Intent In-Feed Google Ads Setup', 
+            status: !isPending ? 'done' : 'pending', 
+            date: !isPending ? 'Day 1' : 'Awaiting confirmation' 
+          },
+          { 
+            name: '3. Algorithmic Recommendation Trigger', 
+            status: !isPending && progress >= 40 ? 'done' : 'pending', 
+            date: 'Days 2-5' 
+          },
+          { 
+            name: '4. Final Studio Analytics Audit Report', 
+            status: isCompleted ? 'done' : 'pending', 
+            date: 'Day 7' 
+          },
         ],
       });
     } catch {
@@ -143,6 +161,18 @@ export default function CampaignTracker() {
           {/* Results Display */}
           {result && (
             <div className="mt-8 pt-6 border-t border-white/10 space-y-6 animate-fadeIn">
+              
+              {/* Order Status Notice if Pending */}
+              {result.isPending && (
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <div className="text-xs text-amber-200 leading-relaxed">
+                    <strong className="text-amber-300 block mb-1 font-semibold text-sm">Order Under Review (Pending Confirmation)</strong>
+                    Your campaign intake has been received. Our team is auditing channel suitability and configuring target Google Ads parameters. Once payment & intake are approved, status will switch to <strong>ACTIVE</strong> and pacing will begin.
+                  </div>
+                </div>
+              )}
+
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-xs font-mono text-slate-400">Campaign Reference</div>
@@ -152,9 +182,11 @@ export default function CampaignTracker() {
                   <span className={`px-3 py-1 rounded-full font-mono text-xs font-bold ${
                     result.status === 'COMPLETED'
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                      : result.status === 'PENDING'
+                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse'
+                      : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
                   }`}>
-                    {result.status}
+                    {result.status === 'PENDING' ? 'PENDING APPROVAL' : result.status}
                   </span>
                 </div>
               </div>
@@ -184,7 +216,7 @@ export default function CampaignTracker() {
                       {stage.status === 'done' ? (
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                       ) : (
-                        <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                        <Clock className={`w-4 h-4 shrink-0 ${stage.status === 'in_progress' ? 'text-amber-400 animate-spin' : 'text-slate-500'}`} />
                       )}
                       <span className={stage.status === 'done' ? 'text-slate-200' : 'text-slate-400'}>
                         {stage.name}
@@ -195,9 +227,9 @@ export default function CampaignTracker() {
                 ))}
               </div>
 
-              <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-between text-xs font-mono">
-                <span className="text-slate-400">Traffic Attribution:</span>
-                <span className="text-emerald-400 font-bold">{result.attribution}</span>
+              <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 flex items-center justify-between text-xs font-mono">
+                <span className="text-slate-400">Current Phase:</span>
+                <span className="text-slate-200 font-bold">{result.attribution}</span>
               </div>
             </div>
           )}
