@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sparkles, ZoomIn, ArrowRight } from 'lucide-react';
+import { Sparkles, ZoomIn, ChevronDown, ChevronUp } from 'lucide-react';
 import { caseStudies, CaseStudy, nicheLabels } from '@/data/caseStudies';
 import LightboxModal from './LightboxModal';
 
@@ -11,11 +11,15 @@ interface CaseStudiesProps {
 
 export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
   const [activeFilter, setActiveFilter] = useState<'all' | 'gaming' | 'travel' | 'music' | 'entertainment'>('all');
-  const [selectedCaseIndex, setSelectedCaseIndex] = useState<number | null>(null);
+  const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const filteredCases = activeFilter === 'all'
     ? caseStudies
     : caseStudies.filter((c) => c.n === activeFilter);
+
+  // Default-e 6-ti card dekhabe
+  const visibleCases = isExpanded ? filteredCases : filteredCases.slice(0, 6);
 
   const filterTabs = [
     { key: 'all' as const, label: 'All Campaigns', count: caseStudies.length },
@@ -26,13 +30,22 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
   ];
 
   const handlePrev = () => {
-    if (selectedCaseIndex === null) return;
-    setSelectedCaseIndex((selectedCaseIndex - 1 + filteredCases.length) % filteredCases.length);
+    if (!selectedCase) return;
+    const currentIndex = filteredCases.findIndex((c) => c.t === selectedCase.t);
+    const prevIndex = (currentIndex - 1 + filteredCases.length) % filteredCases.length;
+    setSelectedCase(filteredCases[prevIndex]);
   };
 
   const handleNext = () => {
-    if (selectedCaseIndex === null) return;
-    setSelectedCaseIndex((selectedCaseIndex + 1) % filteredCases.length);
+    if (!selectedCase) return;
+    const currentIndex = filteredCases.findIndex((c) => c.t === selectedCase.t);
+    const nextIndex = (currentIndex + 1) % filteredCases.length;
+    setSelectedCase(filteredCases[nextIndex]);
+  };
+
+  const handleTabChange = (key: typeof activeFilter) => {
+    setActiveFilter(key);
+    setIsExpanded(false);
   };
 
   return (
@@ -58,7 +71,7 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
           {filterTabs.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveFilter(tab.key)}
+              onClick={() => handleTabChange(tab.key)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
                 activeFilter === tab.key
                   ? 'bg-white text-slate-950 shadow-[0_4px_16px_rgba(255,255,255,0.3)] scale-105'
@@ -75,16 +88,16 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
           ))}
         </div>
 
-        {/* 16 Cases Grid */}
+        {/* Cases Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCases.map((c, idx) => (
+          {visibleCases.map((c, idx) => (
             <article
               key={`${c.t}-${idx}`}
               className="rounded-2xl bg-[#0E131E]/80 border border-white/10 hover:border-emerald-500/40 overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 shadow-xl hover:shadow-[0_20px_40px_-15px_rgba(16,185,129,0.2)] group backdrop-blur-xl"
             >
-              {/* Media Thumbnail Container with zoom overlay */}
+              {/* Media Thumbnail */}
               <div
-                onClick={() => setSelectedCaseIndex(idx)}
+                onClick={() => setSelectedCase(c)}
                 className="relative aspect-[16/10] bg-black overflow-hidden cursor-pointer"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -152,11 +165,24 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
           ))}
         </div>
 
-        {/* Lightbox Trigger */}
+        {/* View All / Collapse Button */}
+        {filteredCases.length > 6 && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95"
+            >
+              <span>{isExpanded ? 'Show Less Proofs' : `View All ${filteredCases.length} Proofs`}</span>
+              {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+          </div>
+        )}
+
+        {/* Lightbox Modal */}
         <LightboxModal
-          isOpen={selectedCaseIndex !== null}
-          onClose={() => setSelectedCaseIndex(null)}
-          caseStudy={selectedCaseIndex !== null ? filteredCases[selectedCaseIndex] : null}
+          isOpen={selectedCase !== null}
+          onClose={() => setSelectedCase(null)}
+          caseStudy={selectedCase}
           onPrev={handlePrev}
           onNext={handleNext}
           onOpenBooking={onOpenBooking}
