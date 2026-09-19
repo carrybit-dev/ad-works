@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, CheckCircle2, Clock, Activity, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Search, CheckCircle2, Clock, Activity } from 'lucide-react';
+
+const SHEETDB_URL = 'https://sheetdb.io/api/v1/nxbc1gqqb06xi';
 
 export default function CampaignTracker() {
   const [query, setQuery] = useState('');
@@ -12,20 +14,57 @@ export default function CampaignTracker() {
 
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!query.trim()) return;
+    const cleanQuery = query.trim();
+    if (!cleanQuery) return;
 
     setLoading(true);
     setError('');
     setResult(null);
 
     try {
-      const res = await fetch(`/api/track?id=${encodeURIComponent(query.trim())}`);
-      const data = await res.json();
-      if (data.success) {
-        setResult(data.trackingResult);
-      } else {
-        setError(data.error || 'No active run found for this query.');
+      // 1. SheetDB theke orderId diye direct browser fetch
+      let res = await fetch(`${SHEETDB_URL}/search?orderId=${encodeURIComponent(cleanQuery)}`);
+      let data = await res.json();
+
+      // 2. Jodi orderId match na kore, videoUrl check korbe
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        res = await fetch(`${SHEETDB_URL}/search?videoUrl=${encodeURIComponent(cleanQuery)}`);
+        data = await res.json();
       }
+
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        setError('No active campaign found for this ID or video link.');
+        return;
+      }
+
+      const row = data[0];
+      const target = Number(String(row.targetViews || '0').replace(/[^0-9]/g, '')) || 2500;
+      const delivered = Number(String(row.viewsDelivered || '0').replace(/[^0-9]/g, '')) || 0;
+      
+      let progress = 0;
+      if (row.progressPercentage !== undefined && row.progressPercentage !== null && row.progressPercentage !== '') {
+        progress = Number(String(row.progressPercentage).replace(/[^0-9]/g, '')) || 0;
+      } else {
+        progress = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
+      }
+
+      const status = (row.status || 'ACTIVE').toUpperCase();
+      const isCompleted = status === 'COMPLETED' || progress >= 100;
+
+      setResult({
+        orderId: row.orderId || cleanQuery,
+        status: status,
+        targetViews: target,
+        viewsDelivered: delivered,
+        progressPercentage: progress,
+        attribution: row.attribution || 'In-Feed Google Ads (70%) • Audience Matching (30%)',
+        stages: [
+          { name: '1. Video & Metadata Audit', status: 'done', date: 'Day 1' },
+          { name: '2. High-Intent In-Feed Google Ads Setup', status: 'done', date: 'Day 1' },
+          { name: '3. Algorithmic Recommendation Trigger', status: progress >= 40 ? 'done' : 'in_progress', date: 'Days 2-5' },
+          { name: '4. Final Studio Analytics Audit Report', status: isCompleted ? 'done' : 'pending', date: 'Day 7' },
+        ],
+      });
     } catch {
       setError('Unable to fetch campaign status. Please try again.');
     } finally {
@@ -136,7 +175,6 @@ export default function CampaignTracker() {
 
               {/* Milestones Stages */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {result.stages?.map((stage: any, idx: number) => (
                   <div
                     key={idx}
@@ -159,7 +197,7 @@ export default function CampaignTracker() {
 
               <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-between text-xs font-mono">
                 <span className="text-slate-400">Traffic Attribution:</span>
-                <span className="text-emerald-400 font-bold">In-Feed Google Ads (64%) • Browse Features (24%)</span>
+                <span className="text-emerald-400 font-bold">{result.attribution}</span>
               </div>
             </div>
           )}
