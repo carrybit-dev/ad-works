@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, Sparkles, Mail, Copy, Check } from 'lucide-react';
+import { X, CheckCircle2, Sparkles, Mail, Copy, Check, Clock } from 'lucide-react';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -59,6 +59,14 @@ export default function BookingModal({
     else if (selectedPkg.includes('Advanced')) target = 8000;
     else if (selectedPkg.includes('Custom')) target = 20000;
 
+    // Current Date formatting (e.g. "20-Sep-2026")
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).replace(/ /g, '-');
+
     try {
       const res = await fetch('https://sheetdb.io/api/v1/nxbc1gqqb06xi', {
         method: 'POST',
@@ -71,11 +79,15 @@ export default function BookingModal({
             {
               orderId: newOrderId,
               videoUrl: videoUrl.trim(),
-              status: 'PENDING', // <-- Default status PENDING
+              status: 'PENDING',
               targetViews: target,
               viewsDelivered: 0,
               progressPercentage: 0,
               attribution: 'In Intake Queue • Awaiting Compliance Audit',
+              packageName: selectedPkg,
+              orderDate: formattedDate,
+              notes: notes.trim() || 'None',
+              paymentStatus: 'UNPAID',
             },
           ],
         }),
@@ -114,8 +126,8 @@ export default function BookingModal({
       `Order ID: ${confirmedCampaign.id}\n` +
       `Package: ${confirmedCampaign.packageName}\n` +
       `Video Link: ${confirmedCampaign.videoUrl}\n` +
-      `Notes: ${confirmedCampaign.notes || 'None'}\n\n` +
-      `Please confirm my campaign and send the payment/invoice instructions.\n`
+      `Target Niche / Notes: ${confirmedCampaign.notes || 'None'}\n\n` +
+      `Please confirm my campaign and send payment instructions.\n`
     );
     window.location.href = `mailto:contact@fardintareque.com?subject=${subject}&body=${body}`;
   };
@@ -214,12 +226,12 @@ export default function BookingModal({
         ) : (
           <div className="text-center py-4 space-y-4 animate-fadeIn">
             <div className="w-14 h-14 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto border border-amber-500/30">
-              <CheckCircle2 className="w-8 h-8" />
+              <Clock className="w-8 h-8" />
             </div>
 
             <h3 className="text-2xl font-bold text-white">Campaign Intake Received!</h3>
             <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto">
-              Your video has entered the intake queue. Your order is currently <span className="text-amber-400 font-semibold">Pending Review</span> until setup confirmation:
+              Your video has entered our intake queue. Status is currently <span className="text-amber-400 font-semibold">Pending Review</span>:
             </p>
 
             <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
