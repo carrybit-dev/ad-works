@@ -24,7 +24,7 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
     { name: 'AI Audit', href: '#scanner' },
     { name: 'Bento Engine', href: '#bento' },
     { name: 'Spillover ROI', href: '#spillover' },
-    { name: '16 Proofs', href: '#proofs' },
+    { name: 'Proofs', href: '#proofs' },
     { name: 'Pricing', href: '#services' },
     { name: 'Tracker', href: '#tracker' },
     { name: 'FAQ', href: '#faq' },
