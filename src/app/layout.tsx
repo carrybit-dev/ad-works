@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23FF4229'/><polygon points='12,8 24,16 12,24' fill='%23FFFFFF'/></svg>",
   },
+  verification: {
+    google: 'N4FO4EW0WB_nsHQTn5zGCB7bT-YSagaLWcO6UwVTN98',
+  },
 };
 
 export default function RootLayout({
