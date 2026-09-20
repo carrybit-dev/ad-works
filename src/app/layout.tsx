@@ -17,6 +17,80 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': 'https://fardintareque.com/#website',
+        url: 'https://fardintareque.com',
+        name: 'Fardin Ad Works',
+        description: 'Targeted Google Ads YouTube Video Promotion & Algorithmic Growth',
+      },
+      // Sitelinks Navigation List
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'Promotion Pricing ($20 - $105)',
+        description: 'Transparent campaign tiers: Starter $20, Growth $45, and Advanced $105.',
+        url: 'https://fardintareque.com/#pricing',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'Verified Case Studies',
+        description: 'Real audience proof and YouTube Studio analytics verification.',
+        url: 'https://fardintareque.com/#proofs',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'Live Order Tracker',
+        description: 'Track real-time Google Ads campaign progress and delivery percentages.',
+        url: 'https://fardintareque.com/#tracker',
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'AI Channel Scanner',
+        description: 'Instant YouTube channel and video compliance audit before booking.',
+        url: 'https://fardintareque.com/#audit',
+      },
+      // Product & Offer Pricing Data for Rich Snippets
+      {
+        '@type': 'Product',
+        name: 'YouTube In-Feed Discovery Promotion',
+        description: 'Targeted Google Ads discovery runs for authentic viewer retention and organic algorithmic spillover.',
+        brand: {
+          '@type': 'Brand',
+          name: 'Fardin Ad Works',
+        },
+        offers: [
+          {
+            '@type': 'Offer',
+            name: 'Starter Promotion',
+            price: '20.00',
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+            url: 'https://fardintareque.com/#pricing',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Growth Promotion',
+            price: '45.00',
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+            url: 'https://fardintareque.com/#pricing',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Advanced Promotion',
+            price: '105.00',
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+            url: 'https://fardintareque.com/#pricing',
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
@@ -25,6 +99,10 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className="bg-[#07090E] text-[#F1F5F9] relative selection:bg-[#FF4229] selection:text-white">
