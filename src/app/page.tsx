@@ -17,6 +17,7 @@ import FaqSection from '@/components/FaqSection';
 import Footer from '@/components/Footer';
 import BookingModal from '@/components/BookingModal';
 import CommandMenu from '@/components/CommandMenu';
+import LiveActivityToast from '@/components/LiveActivityToast';
 
 export default function Home() {
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -91,6 +92,9 @@ export default function Home() {
         onClose={() => setCommandMenuOpen(false)}
         onOpenBooking={handleOpenBooking}
       />
+
+      {/* Dynamic Real-Time Social Proof Toast */}
+      <LiveActivityToast />
     </main>
   );
 }
