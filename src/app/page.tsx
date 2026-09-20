@@ -18,6 +18,7 @@ import Footer from '@/components/Footer';
 import BookingModal from '@/components/BookingModal';
 import CommandMenu from '@/components/CommandMenu';
 import LiveActivityToast from '@/components/LiveActivityToast';
+import QuickChatWidget from '@/components/QuickChatWidget';
 
 export default function Home() {
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -95,6 +96,9 @@ export default function Home() {
 
       {/* Dynamic Real-Time Social Proof Toast */}
       <LiveActivityToast />
+
+      {/* Floating Live Desk / Quick Support Widget */}
+      <QuickChatWidget />
     </main>
   );
 }
