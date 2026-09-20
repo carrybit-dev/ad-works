@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import SocialProofTicker from '@/components/SocialProofTicker';
@@ -24,6 +24,21 @@ export default function Home() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [commandMenuOpen, setCommandMenuOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState('Growth Promotion ($45)');
+
+  // Reload korle shobar upore niye jawar ebong hash URL clean korar logic
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+
+      // URL-e thaka #proofs ba onno hash shoriye dewa
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
+  }, []);
 
   const handleOpenBooking = (pkg?: string) => {
     if (pkg) setSelectedPackage(pkg);
@@ -97,7 +112,7 @@ export default function Home() {
       {/* Dynamic Real-Time Social Proof Toast */}
       <LiveActivityToast />
 
-      {/* Floating Live Desk / Quick Support Widget */}
+      {/* Floating Quick Support Desk */}
       <QuickChatWidget />
     </main>
   );
