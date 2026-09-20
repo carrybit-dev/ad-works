@@ -26,10 +26,11 @@ export default function QuickChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-[150] font-sans">
+    /* bottom-20 deway Netlify badge er upor thakbe ebong clear dekha jabe */
+    <div className="fixed bottom-20 right-5 sm:bottom-16 sm:right-6 z-[200] font-sans">
       {/* Expanded Chat Drawer */}
       {isOpen && (
-        <div className="mb-3.5 w-[310px] sm:w-[340px] rounded-3xl bg-[#0E1422]/95 border border-white/20 shadow-2xl backdrop-blur-2xl p-5 text-white animate-scaleUp">
+        <div className="mb-3 w-[300px] sm:w-[330px] rounded-3xl bg-[#0E1422]/95 border border-white/20 shadow-2xl backdrop-blur-2xl p-5 text-white animate-scaleUp">
           
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
@@ -96,7 +97,7 @@ export default function QuickChatWidget() {
       {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group relative flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-[#FF4229] to-[#FF7A50] text-white font-bold text-xs shadow-[0_8px_24px_rgba(255,66,41,0.45)] hover:scale-105 active:scale-95 transition-all ml-auto"
+        className="group relative flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-[#FF4229] to-[#FF7A50] text-white font-bold text-xs shadow-[0_8px_24px_rgba(255,66,41,0.5)] hover:scale-105 active:scale-95 transition-all ml-auto cursor-pointer"
         aria-label="Open Quick Support"
       >
         <span className="relative flex h-2 w-2">
