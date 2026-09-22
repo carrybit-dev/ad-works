@@ -41,20 +41,32 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
           }`}
           aria-label="Main Navigation"
         >
-          {/* Brand */}
-          <a href="#" className="flex items-center gap-3 text-white font-extrabold group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FF4229] to-[#FF7A50] flex items-center justify-center text-white shadow-[0_4px_16px_rgba(255,66,41,0.4)] group-hover:scale-105 transition-transform">
-              <Play className="w-4 h-4 fill-white translate-x-0.5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm sm:text-base font-extrabold tracking-tight leading-none text-white">
-                FARDIN AD WORKS
-              </span>
-              <span className="text-[10px] font-mono text-[#FF7A50] tracking-wider uppercase font-semibold">
-                SaaS YouTube Growth
-              </span>
-            </div>
-          </a>
+          {/* Left Side: Mobile Hamburger + Brand Logo */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Mobile Hamburger Button (Now on Left) */}
+            <button
+              onClick={() => setMobileDrawerOpen(true)}
+              className="lg:hidden p-1.5 -ml-1 rounded-xl text-slate-200 hover:text-white hover:bg-white/5 transition-colors"
+              aria-label="Open Mobile Menu"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+
+            {/* Brand */}
+            <a href="#" className="flex items-center gap-3 text-white font-extrabold group">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FF4229] to-[#FF7A50] flex items-center justify-center text-white shadow-[0_4px_16px_rgba(255,66,41,0.4)] group-hover:scale-105 transition-transform">
+                <Play className="w-4 h-4 fill-white translate-x-0.5" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm sm:text-base font-extrabold tracking-tight leading-none text-white">
+                  FARDIN AD WORKS
+                </span>
+                <span className="text-[10px] font-mono text-[#FF7A50] tracking-wider uppercase font-semibold">
+                  SaaS YouTube Growth
+                </span>
+              </div>
+            </a>
+          </div>
 
           {/* Desktop Nav Links */}
           <ul className="hidden lg:flex items-center gap-6 list-none">
@@ -94,15 +106,6 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
                 <span>Launch Run</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </span>
-            </button>
-
-            {/* Mobile Hamburger Button */}
-            <button
-              onClick={() => setMobileDrawerOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/5 transition-colors"
-              aria-label="Open Mobile Menu"
-            >
-              <Menu className="w-6 h-6" />
             </button>
           </div>
         </nav>
