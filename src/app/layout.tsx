@@ -3,11 +3,30 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://fardintareque.com'),
-  title: 'Fardin Ad Works | Targeted YouTube Video Promotion',
+  applicationName: 'Fardin Ad Works',
+  title: {
+    default: 'Fardin Ad Works | Targeted YouTube Video Promotion',
+    template: '%s | Fardin Ad Works',
+  },
   description:
     'Laser-focused Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators. 100% YouTube TOS safe.',
   alternates: {
     canonical: 'https://fardintareque.com',
+  },
+  openGraph: {
+    title: 'Fardin Ad Works | Targeted YouTube Video Promotion',
+    description:
+      'Laser-focused Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators.',
+    url: 'https://fardintareque.com',
+    siteName: 'Fardin Ad Works',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fardin Ad Works | Targeted YouTube Video Promotion',
+    description:
+      'Laser-focused Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators.',
   },
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23FF4229'/><polygon points='12,8 24,16 12,24' fill='%23FFFFFF'/></svg>",
@@ -31,6 +50,9 @@ export default function RootLayout({
         url: 'https://fardintareque.com',
         name: 'Fardin Ad Works',
         description: 'Targeted Google Ads YouTube Video Promotion & Algorithmic Growth',
+        publisher: {
+          '@id': 'https://fardintareque.com/#person',
+        },
       },
       {
         '@type': 'Person',
@@ -44,7 +66,6 @@ export default function RootLayout({
           'https://www.facebook.com/fardintarequeshuvo',
         ],
       },
-      // Sitelinks Navigation List
       {
         '@type': 'SiteNavigationElement',
         name: 'Promotion Pricing ($20 - $105)',
@@ -69,11 +90,11 @@ export default function RootLayout({
         description: 'Instant YouTube channel and video compliance audit before booking.',
         url: 'https://fardintareque.com/#audit',
       },
-      // Product & Offer Pricing Data for Rich Snippets
       {
         '@type': 'Product',
         name: 'YouTube In-Feed Discovery Promotion',
-        description: 'Targeted Google Ads discovery runs for authentic viewer retention and organic algorithmic spillover.',
+        description:
+          'Targeted Google Ads discovery runs for authentic viewer retention and organic algorithmic spillover.',
         brand: {
           '@type': 'Brand',
           name: 'Fardin Ad Works',
