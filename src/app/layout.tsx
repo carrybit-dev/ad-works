@@ -2,8 +2,13 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Fardin Ad Works — Targeted YouTube Video Promotion & Algorithmic Growth',
-  description: 'Precision Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators. 100% YouTube TOS safe.',
+  metadataBase: new URL('https://fardintareque.com'),
+  title: 'Fardin Ad Works | Targeted YouTube Video Promotion',
+  description:
+    'Laser-focused Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators. 100% YouTube TOS safe.',
+  alternates: {
+    canonical: 'https://fardintareque.com',
+  },
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23FF4229'/><polygon points='12,8 24,16 12,24' fill='%23FFFFFF'/></svg>",
   },
@@ -26,6 +31,18 @@ export default function RootLayout({
         url: 'https://fardintareque.com',
         name: 'Fardin Ad Works',
         description: 'Targeted Google Ads YouTube Video Promotion & Algorithmic Growth',
+      },
+      {
+        '@type': 'Person',
+        '@id': 'https://fardintareque.com/#person',
+        name: 'Fardin Tareque',
+        url: 'https://fardintareque.com',
+        jobTitle: 'YouTube Video Promotion Specialist',
+        sameAs: [
+          'https://bd.linkedin.com/in/fardintareque',
+          'https://www.instagram.com/fardin_tareque_/',
+          'https://www.facebook.com/fardintarequeshuvo',
+        ],
       },
       // Sitelinks Navigation List
       {
