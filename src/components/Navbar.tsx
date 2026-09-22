@@ -116,10 +116,10 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
         />
       )}
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer (Left Aligned) */}
       <aside
-        className={`fixed top-0 right-0 bottom-0 w-[85vw] max-w-[340px] bg-[#0A0D15]/95 backdrop-blur-2xl border-l border-white/10 z-[101] p-6 flex flex-col justify-between transition-transform duration-300 ease-out ${
-          mobileDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 left-0 bottom-0 w-[85vw] max-w-[340px] bg-[#0A0D15]/95 backdrop-blur-2xl border-r border-white/10 z-[101] p-6 flex flex-col justify-between transition-transform duration-300 ease-out ${
+          mobileDrawerOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div>
