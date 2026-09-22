@@ -1,39 +1,48 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+
+// ১. Above-the-fold কম্পোনেন্টগুলো সরাসরি ইমপোর্ট (দ্রুত LCP বজায় রাখতে)
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import SocialProofTicker from '@/components/SocialProofTicker';
-import VideoScanner from '@/components/VideoScanner';
-import StatsTicker from '@/components/StatsTicker';
-import BentoGrid from '@/components/BentoGrid';
-import SpilloverSimulator from '@/components/SpilloverSimulator';
-import CaseStudies from '@/components/CaseStudies';
-import PricingTiers from '@/components/PricingTiers';
-import CampaignTracker from '@/components/CampaignTracker';
-import GrowthEngine from '@/components/GrowthEngine';
-import Testimonials from '@/components/Testimonials';
-import FaqSection from '@/components/FaqSection';
-import Footer from '@/components/Footer';
-import BookingModal from '@/components/BookingModal';
-import CommandMenu from '@/components/CommandMenu';
-import LiveActivityToast from '@/components/LiveActivityToast';
-import QuickChatWidget from '@/components/QuickChatWidget';
+
+// ২. স্ক্রোলের নিচের সেকশনগুলো ডাইনামিক ইমপোর্ট (HTML সাইজ ও ইনিশিয়াল লোড কমাতে)
+const VideoScanner = dynamic(() => import('@/components/VideoScanner'), { ssr: false });
+const StatsTicker = dynamic(() => import('@/components/StatsTicker'));
+const BentoGrid = dynamic(() => import('@/components/BentoGrid'));
+const SpilloverSimulator = dynamic(() => import('@/components/SpilloverSimulator'), { ssr: false });
+const CaseStudies = dynamic(() => import('@/components/CaseStudies'));
+const PricingTiers = dynamic(() => import('@/components/PricingTiers'));
+const CampaignTracker = dynamic(() => import('@/components/CampaignTracker'), { ssr: false });
+const GrowthEngine = dynamic(() => import('@/components/GrowthEngine'));
+const Testimonials = dynamic(() => import('@/components/Testimonials'));
+const FaqSection = dynamic(() => import('@/components/FaqSection'));
+const Footer = dynamic(() => import('@/components/Footer'));
+
+// ৩. ইন্টারেক্টিভ মডাল এবং উইজেট (প্রয়োজনের সময় লোড হবে)
+const BookingModal = dynamic(() => import('@/components/BookingModal'), { ssr: false });
+const CommandMenu = dynamic(() => import('@/components/CommandMenu'), { ssr: false });
+const LiveActivityToast = dynamic(() => import('@/components/LiveActivityToast'), { ssr: false });
+const QuickChatWidget = dynamic(() => import('@/components/QuickChatWidget'), { ssr: false });
 
 export default function Home() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [commandMenuOpen, setCommandMenuOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState('Growth Promotion ($45)');
 
-  // Reload korle shobar upore niye jawar ebong hash URL clean korar logic
+  // Forced Reflow এড়াতে requestAnimationFrame ব্যবহার করে স্ক্রোল হ্যান্ডলিং
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if ('scrollRestoration' in window.history) {
         window.history.scrollRestoration = 'manual';
       }
-      window.scrollTo(0, 0);
 
-      // URL-e thaka #proofs ba onno hash shoriye dewa
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+
       if (window.location.hash) {
         window.history.replaceState(null, '', window.location.pathname);
       }
@@ -62,57 +71,38 @@ export default function Home() {
       {/* Live Social Proof Activity Ticker */}
       <SocialProofTicker />
 
-      {/* AI-Powered YouTube Video & Channel Scanner */}
+      {/* Lazy Loaded Below-the-fold Sections */}
       <VideoScanner onOpenBooking={handleOpenBooking} />
-
-      {/* Performance Ticker */}
       <StatsTicker />
-
-      {/* Linear-Style Asymmetric Bento Grid Engine */}
       <BentoGrid />
-
-      {/* Compounding & Organic Browse Spillover Simulator */}
       <SpilloverSimulator onOpenBooking={handleOpenBooking} />
-
-      {/* 16 Real Verified YouTube Case Studies */}
       <CaseStudies onOpenBooking={handleOpenBooking} />
-
-      {/* Pricing & Retainer Plans */}
       <PricingTiers onOpenBooking={handleOpenBooking} />
-
-      {/* Full-Stack Live Order Tracking Portal */}
       <CampaignTracker />
-
-      {/* 4 Architecture Pillars */}
       <GrowthEngine />
-
-      {/* Creator Testimonials */}
       <Testimonials />
-
-      {/* FAQ Accordion */}
       <FaqSection />
-
-      {/* High-Conversion Footer */}
       <Footer onOpenBooking={handleOpenBooking} />
 
-      {/* Full-Stack Campaign Booking Intake Dialog */}
-      <BookingModal
-        isOpen={bookingOpen}
-        onClose={() => setBookingOpen(false)}
-        defaultPackage={selectedPackage}
-      />
+      {/* Conditionally Rendered Modals */}
+      {bookingOpen && (
+        <BookingModal
+          isOpen={bookingOpen}
+          onClose={() => setBookingOpen(false)}
+          defaultPackage={selectedPackage}
+        />
+      )}
 
-      {/* Linear-Style Command Menu (⌘K) */}
-      <CommandMenu
-        isOpen={commandMenuOpen}
-        onClose={() => setCommandMenuOpen(false)}
-        onOpenBooking={handleOpenBooking}
-      />
+      {commandMenuOpen && (
+        <CommandMenu
+          isOpen={commandMenuOpen}
+          onClose={() => setCommandMenuOpen(false)}
+          onOpenBooking={handleOpenBooking}
+        />
+      )}
 
-      {/* Dynamic Real-Time Social Proof Toast */}
+      {/* Real-time Overlays */}
       <LiveActivityToast />
-
-      {/* Floating Quick Support Desk */}
       <QuickChatWidget />
     </main>
   );
