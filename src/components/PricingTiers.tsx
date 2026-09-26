@@ -66,7 +66,7 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
   ];
 
   return (
-    <section id="services" className="py-24 relative border-t border-white/10">
+    <section id="pricing" className="py-24 relative border-t border-white/10">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
         
         {/* Header */}

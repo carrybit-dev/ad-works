@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Sparkles, ZoomIn, ChevronDown, ChevronUp } from 'lucide-react';
 import { caseStudies, CaseStudy, nicheLabels } from '@/data/caseStudies';
 import LightboxModal from './LightboxModal';
@@ -102,11 +103,12 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
                 aria-label={`Inspect proof for ${c.t}`}
                 className="relative aspect-[16/10] bg-black overflow-hidden cursor-pointer w-full text-left"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={c.img}
                   alt={`${c.t} proof`}
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-mono backdrop-blur-sm">

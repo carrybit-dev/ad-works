@@ -57,7 +57,7 @@ export default function CommandMenu({
         { label: 'Organic Spillover & Compounding Engine', href: '#spillover', icon: BarChart2 },
         { label: '16 Verified Proof Case Studies', href: '#proofs', icon: Play },
         { label: 'Live Campaign Status Tracker', href: '#tracker', icon: Activity },
-        { label: 'Pricing & Retainer Packages', href: '#services', icon: ShieldCheck },
+        { label: 'Pricing & Retainer Packages', href: '#pricing', icon: ShieldCheck },
       ],
     },
     {

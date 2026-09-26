@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Search, Zap, ArrowRight, Activity, Flame, Tag, Users, AlertCircle } from 'lucide-react';
 
 interface VideoScannerProps {
@@ -192,11 +193,13 @@ export default function VideoScanner({ onOpenBooking }: VideoScannerProps) {
               <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-[#151D2C] to-[#0D121F] border border-emerald-500/30 flex flex-col sm:flex-row gap-4 items-center">
                 {/* Real YouTube Thumbnail */}
                 <div className="relative w-full sm:w-44 aspect-video rounded-xl overflow-hidden border border-white/15 shrink-0 bg-black">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={auditResult.thumbnailUrl}
                     alt={auditResult.title}
+                    width={480}
+                    height={360}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                   <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-mono text-white">
                     REAL

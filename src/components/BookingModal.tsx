@@ -9,6 +9,50 @@ interface BookingModalProps {
   defaultPackage: string;
 }
 
+interface ConfirmedCampaign {
+  id: string;
+  videoUrl: string;
+  packageName: string;
+  targetViews: number;
+  customerEmail: string;
+  notes?: string;
+}
+
+// Booking confirmation emails via EmailJS — entirely optional and best-effort.
+// Requires NEXT_PUBLIC_EMAILJS_PUBLIC_KEY, NEXT_PUBLIC_EMAILJS_SERVICE_ID and
+// NEXT_PUBLIC_EMAILJS_TEMPLATE_ID. If any are missing, this is a silent no-op
+// and the booking still succeeds. Never surfaces errors to the user.
+async function sendBookingEmails(campaign: ConfirmedCampaign): Promise<void> {
+  const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+  const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+  const customerTemplateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+  if (!publicKey || !serviceId || !customerTemplateId) return;
+  try {
+    const { default: emailjs } = await import('@emailjs/browser');
+    const params = {
+      to_email: campaign.customerEmail,
+      customer_email: campaign.customerEmail,
+      order_id: campaign.id,
+      package_name: campaign.packageName,
+      video_url: campaign.videoUrl,
+      target_views: campaign.targetViews.toLocaleString(),
+      notes: campaign.notes || 'None',
+    };
+    await emailjs.send(serviceId, customerTemplateId, params, { publicKey });
+    const ownerTemplateId = process.env.NEXT_PUBLIC_EMAILJS_OWNER_TEMPLATE_ID;
+    if (ownerTemplateId) {
+      await emailjs.send(
+        serviceId,
+        ownerTemplateId,
+        { ...params, to_email: 'contact@fardintareque.com' },
+        { publicKey }
+      );
+    }
+  } catch {
+    // Booking already succeeded — email delivery is best-effort only.
+  }
+}
+
 const PACKAGE_OPTIONS = [
   'Starter Promotion ($20)',
   'Growth Promotion ($45)',
@@ -34,17 +78,12 @@ export default function BookingModal({
   defaultPackage,
 }: BookingModalProps) {
   const [videoUrl, setVideoUrl] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
   const [selectedPkg, setSelectedPkg] = useState(() => normalizePackage(defaultPackage || 'Growth Promotion ($45)'));
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [confirmedCampaign, setConfirmedCampaign] = useState<{
-    id: string;
-    videoUrl: string;
-    packageName: string;
-    targetViews: number;
-    notes?: string;
-  } | null>(null);
+  const [confirmedCampaign, setConfirmedCampaign] = useState<ConfirmedCampaign | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -87,6 +126,7 @@ export default function BookingModal({
         },
         body: JSON.stringify({
           videoUrl: videoUrl.trim(),
+          customerEmail: customerEmail.trim(),
           packageName: selectedPkg,
           notes: notes.trim() || 'None',
         }),
@@ -95,13 +135,17 @@ export default function BookingModal({
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setConfirmedCampaign({
+        const campaign: ConfirmedCampaign = {
           id: data.campaign.id,
           videoUrl: data.campaign.videoUrl,
           packageName: data.campaign.packageName,
           targetViews: data.campaign.targetViews,
+          customerEmail: data.campaign.customerEmail,
           notes,
-        });
+        };
+        setConfirmedCampaign(campaign);
+        // Fire-and-forget: confirmation email is best-effort, never blocks UI.
+        void sendBookingEmails(campaign);
       } else {
         setError(data.error || 'Failed to record order. Please try again or reach out directly.');
       }
@@ -181,6 +225,24 @@ export default function BookingModal({
                   onChange={(e) => setVideoUrl(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF4229]"
                 />
+              </div>
+
+              <div>
+                <label htmlFor="booking-email" className="block text-xs font-mono uppercase text-slate-300 mb-2">
+                  Email Address <span className="text-[#FF4229]">*</span>
+                </label>
+                <input
+                  id="booking-email"
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  value={customerEmail}
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF4229]"
+                />
+                <p className="text-[11px] text-slate-500 mt-1.5">
+                  Your order confirmation and receipt go here.
+                </p>
               </div>
 
               <div>

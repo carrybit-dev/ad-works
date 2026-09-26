@@ -23,7 +23,7 @@ function isYouTubeUrl(url: string): boolean {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { videoUrl, packageName, notes } = body;
+    const { videoUrl, packageName, notes, customerEmail } = body;
 
     if (!videoUrl || typeof videoUrl !== 'string') {
       return NextResponse.json(
@@ -35,6 +35,13 @@ export async function POST(request: Request) {
     if (!isYouTubeUrl(videoUrl)) {
       return NextResponse.json(
         { success: false, error: 'Please provide a valid YouTube video URL (youtube.com or youtu.be).' },
+        { status: 400 }
+      );
+    }
+
+    if (!customerEmail || typeof customerEmail !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail.trim())) {
+      return NextResponse.json(
+        { success: false, error: 'A valid email address is required so we can confirm your order.' },
         { status: 400 }
       );
     }
@@ -58,6 +65,7 @@ export async function POST(request: Request) {
     const sheetData = {
       orderId: orderId,
       videoUrl: videoUrl.trim(),
+      customerEmail: customerEmail.trim(),
       packageName: packageName || '',
       status: 'PENDING',
       targetViews: targetViews,
@@ -79,7 +87,17 @@ export async function POST(request: Request) {
     });
 
     if (!sheetRes.ok) {
+      // Never report success when the order wasn't actually recorded —
+      // a "confirmed" order that was lost is worse than a visible error.
       console.error('SheetDB post failed:', await sheetRes.text());
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'We could not save your order right now. Please email contact@fardintareque.com with your video link and package so we can set it up manually.',
+        },
+        { status: 502 }
+      );
     }
 
     // 4. Client-ke confirmed response pathano
@@ -88,6 +106,7 @@ export async function POST(request: Request) {
       campaign: {
         id: orderId,
         videoUrl: videoUrl.trim(),
+        customerEmail: customerEmail.trim(),
         packageName: packageName,
         targetViews: targetViews,
         status: 'PENDING',

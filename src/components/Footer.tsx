@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Play, Copy, Check, Mail, ArrowRight } from 'lucide-react';
 
 interface FooterProps {
@@ -76,7 +77,7 @@ export default function Footer({ onOpenBooking }: FooterProps) {
               Navigation
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-400">
-              <li><a href="#services" className="hover:text-white transition-colors">Campaign Packages</a></li>
+              <li><a href="#pricing" className="hover:text-white transition-colors">Campaign Packages</a></li>
               <li><a href="#proofs" className="hover:text-white transition-colors">16 Case Studies</a></li>
               <li><a href="#why-us" className="hover:text-white transition-colors">Architecture Engine</a></li>
               <li><a href="#tracker" className="hover:text-white transition-colors">Live Order Tracker</a></li>
@@ -102,12 +103,27 @@ export default function Footer({ onOpenBooking }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
-          <div>
-            © 2026 Fardin Ad Works. All rights reserved.
-          </div>
-          <div>
-            100% Policy Compliant · YouTube &amp; Google Ads are trademarks of Alphabet Inc.
+        <div className="pt-8 flex flex-col items-center gap-4 text-xs font-mono text-slate-500">
+          <nav aria-label="Legal" className="flex items-center gap-5 text-slate-400">
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms of Service
+            </Link>
+            <span className="text-slate-700">·</span>
+            <Link href="/refund" className="hover:text-white transition-colors">
+              Refund Policy
+            </Link>
+            <span className="text-slate-700">·</span>
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
+          </nav>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+            <div>
+              © 2026 Fardin Ad Works. All rights reserved.
+            </div>
+            <div>
+              100% Policy Compliant · YouTube &amp; Google Ads are trademarks of Alphabet Inc.
+            </div>
           </div>
         </div>
 

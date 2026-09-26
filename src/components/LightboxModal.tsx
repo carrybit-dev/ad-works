@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { CaseStudy } from '@/data/caseStudies';
 
@@ -78,10 +79,11 @@ export default function LightboxModal({
 
         {/* Screenshot Image Container */}
         <div className="w-full max-h-[72vh] rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black flex items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={caseStudy.img}
             alt={`${caseStudy.t} proof`}
+            width={900}
+            height={900}
             className="max-h-[72vh] w-auto max-w-full object-contain"
           />
         </div>

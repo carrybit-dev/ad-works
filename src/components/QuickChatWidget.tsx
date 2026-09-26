@@ -1,95 +1,112 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MessageSquare, X, Send, Mail, CheckCircle2 } from 'lucide-react';
+import { MessageSquare, X, Mail, CheckCircle2, Send } from 'lucide-react';
 
+const SUPPORT_EMAIL = 'contact@fardintareque.com';
+
+/**
+ * Honest contact widget: a small form that opens the visitor's email client
+ * with a prefilled message. No fake "online now" presence, no live-chat claims.
+ */
 export default function QuickChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
 
-  // Agency contact routing
-  const supportEmail = 'contact@fardintareque.com';
-  const whatsappNumber = '8801615744712';
-
-  const handleWhatsApp = () => {
-    const message = encodeURIComponent(
-      "Hello AdWorks Team, I'm reviewing your Google Ads YouTube growth campaigns. I'd like to consult on placement strategy for my channel."
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(
+      `Website inquiry${name.trim() ? ` from ${name.trim()}` : ''}`
     );
-    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleEmail = () => {
-    const subject = encodeURIComponent('Agency Consultation Request - YouTube Growth');
     const body = encodeURIComponent(
-      "Hello Support Desk,\n\nI am inquiring about running Google Ads in-feed discovery campaigns for my YouTube uploads.\n\nChannel Link: \nTarget Audience / Niche: \nBudget Consideration: \n\nPlease provide placement recommendations."
+      `Hi Fardin,\n\n${message.trim()}\n\n— ${name.trim() || 'A website visitor'}`
     );
-    window.location.href = `mailto:${supportEmail}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
   };
+
+  const canSend = name.trim().length > 0 && message.trim().length > 0;
 
   return (
-    /* bottom-20 deway Netlify badge er upor thakbe ebong clear dekha jabe */
     <div className="fixed bottom-20 right-5 sm:bottom-16 sm:right-6 z-[200] font-sans">
-      {/* Expanded Chat Drawer */}
+      {/* Expanded Contact Drawer */}
       {isOpen && (
         <div className="mb-3 w-[300px] sm:w-[330px] rounded-3xl bg-[#0E1422]/95 border border-white/20 shadow-2xl backdrop-blur-2xl p-5 text-white animate-scaleUp">
-          
+
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="relative">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#FF4229] to-[#FF7A50] flex items-center justify-center font-bold text-xs text-white shadow-md font-mono">
-                  AW
-                </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-slate-500 border-2 border-[#0E1422] rounded-full" />
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#FF4229] to-[#FF7A50] flex items-center justify-center font-bold text-xs text-white shadow-md font-mono">
+                AW
               </div>
               <div>
                 <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                  AdWorks Campaign Desk
+                  Contact Us
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                 </h4>
-                <p className="text-[10px] font-mono text-slate-400">Message us — we reply personally</p>
+                <p className="text-[10px] font-mono text-slate-400">We reply by email, personally</p>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
               className="p-1 rounded-lg text-slate-400 hover:text-white bg-white/5 transition-colors"
-              aria-label="Close"
+              aria-label="Close contact form"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Body Intro */}
-          <p className="text-xs text-slate-300 leading-relaxed mb-4">
-            Have questions regarding audience segmentation, compliance review, or custom ad scheduling? Connect with our growth team:
-          </p>
-
-          {/* Action Buttons */}
-          <div className="space-y-2.5">
+          {/* Contact Form */}
+          <form onSubmit={handleSend} className="space-y-3">
+            <div>
+              <label htmlFor="chat-name" className="block text-[11px] font-mono uppercase text-slate-400 mb-1.5">
+                Your name
+              </label>
+              <input
+                id="chat-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Jane Doe"
+                maxLength={80}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-[#FF4229] placeholder:text-slate-600"
+              />
+            </div>
+            <div>
+              <label htmlFor="chat-message" className="block text-[11px] font-mono uppercase text-slate-400 mb-1.5">
+                Message
+              </label>
+              <textarea
+                id="chat-message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Ask about packages, targeting, timelines…"
+                rows={4}
+                maxLength={1000}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-[#FF4229] placeholder:text-slate-600 resize-none"
+              />
+            </div>
             <button
-              onClick={handleWhatsApp}
-              className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center justify-between transition-all"
+              type="submit"
+              disabled={!canSend}
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#FF4229] to-[#FF7A50] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
-              <div className="flex items-center gap-2">
-                <Send className="w-3.5 h-3.5" />
-                <span>WhatsApp Desk</span>
-              </div>
-              <span className="text-[10px] font-mono opacity-80">Opens WhatsApp</span>
+              <Send className="w-3.5 h-3.5" />
+              <span>Send via Email</span>
             </button>
-
-            <button
-              onClick={handleEmail}
-              className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 text-xs font-semibold flex items-center justify-between transition-all"
-            >
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-[#FF7A50]" />
-                <span>Email Support Desk</span>
-              </div>
-              <span className="text-[10px] font-mono text-slate-400">contact@</span>
-            </button>
-          </div>
+            <p className="text-[10px] font-mono text-slate-500 text-center">
+              Opens your email app addressed to {SUPPORT_EMAIL}
+            </p>
+          </form>
 
           <div className="mt-3.5 pt-2.5 border-t border-white/5 text-center">
-            <span className="text-[10px] font-mono text-slate-400">Official Alphabet MCC Architecture</span>
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              className="inline-flex items-center gap-1.5 text-[11px] font-mono text-slate-400 hover:text-white transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5 text-[#FF7A50]" />
+              <span>{SUPPORT_EMAIL}</span>
+            </a>
           </div>
         </div>
       )}
@@ -98,14 +115,10 @@ export default function QuickChatWidget() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="group relative flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-[#FF4229] to-[#FF7A50] text-white font-bold text-xs shadow-[0_8px_24px_rgba(255,66,41,0.5)] hover:scale-105 active:scale-95 transition-all ml-auto cursor-pointer"
-        aria-label="Open Quick Support"
+        aria-label={isOpen ? 'Close contact form' : 'Open contact form'}
       >
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-        </span>
         <MessageSquare className="w-4 h-4" />
-        <span className="font-mono">Quick Support</span>
+        <span className="font-mono">Contact</span>
       </button>
     </div>
   );
