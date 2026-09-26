@@ -1,5 +1,5 @@
 {
-  "name": "saas-app",
+  "name": "ad-works",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "lucide-react": "^1.44.0",
     "next": "16.3.4",
     "react": "19.2.8",
