@@ -36,7 +36,7 @@ export default function FaqSection() {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs mb-4">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>07 · QUESTIONS &amp; ANSWERS</span>
+            <span>09 · QUESTIONS &amp; ANSWERS</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             Frequently Asked <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">Questions</span>
@@ -60,6 +60,8 @@ export default function FaqSection() {
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-panel-${idx}`}
                   className="w-full text-left p-6 flex items-center justify-between gap-4"
                 >
                   <span className="text-base sm:text-lg font-bold text-white">
@@ -73,7 +75,11 @@ export default function FaqSection() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 text-sm sm:text-base text-slate-300 leading-relaxed border-t border-white/5 pt-4 animate-fadeIn">
+                  <div
+                    id={`faq-panel-${idx}`}
+                    role="region"
+                    className="px-6 pb-6 text-sm sm:text-base text-slate-300 leading-relaxed border-t border-white/5 pt-4 animate-fadeIn"
+                  >
                     {faq.a}
                   </div>
                 )}

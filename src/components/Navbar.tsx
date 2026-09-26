@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Play, ArrowRight, Sparkles, Search, Command } from 'lucide-react';
+import { Menu, X, Play, ArrowRight, Sparkles, Search } from 'lucide-react';
 
 interface NavbarProps {
   onOpenBooking: (pkg?: string) => void;
@@ -121,6 +121,7 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
 
       {/* Mobile Drawer (Left Aligned) */}
       <aside
+        aria-label="Mobile navigation"
         className={`fixed top-0 left-0 bottom-0 w-[85vw] max-w-[340px] bg-[#0A0D15]/95 backdrop-blur-2xl border-r border-white/10 z-[101] p-6 flex flex-col justify-between transition-transform duration-300 ease-out ${
           mobileDrawerOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
@@ -136,6 +137,7 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
             <button
               onClick={() => setMobileDrawerOpen(false)}
               className="p-1.5 rounded-full text-slate-400 hover:text-white bg-white/5"
+              aria-label="Close Mobile Menu"
             >
               <X className="w-5 h-5" />
             </button>

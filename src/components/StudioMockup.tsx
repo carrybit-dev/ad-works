@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Activity, Play, Eye, Clock, Users, ShieldCheck, Flame } from 'lucide-react';
+import { Activity, Play, Eye, Clock, ShieldCheck, Flame } from 'lucide-react';
 
 export default function StudioMockup() {
   const [activeTab, setActiveTab] = useState<'overview' | 'reach' | 'retention'>('overview');
@@ -16,7 +16,7 @@ export default function StudioMockup() {
 
       <div className="absolute -bottom-4 -left-2 sm:-left-4 z-20 hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0E1422]/90 border border-[#FF4229]/40 text-[#FFA58A] font-mono text-xs shadow-xl backdrop-blur-md">
         <ShieldCheck className="w-4 h-4 text-[#FF4229]" />
-        <span>100% Monetization Safe &amp; Compliant</span>
+        <span>Monetization-safe traffic method</span>
       </div>
 
       {/* Main Glass Dashboard */}
@@ -30,11 +30,10 @@ export default function StudioMockup() {
           </div>
           <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
             <Play className="w-3.5 h-3.5 text-[#FF4229] fill-[#FF4229]" />
-            <span>YouTube Studio · Live Attribution</span>
+            <span>Case-study snapshot · illustrative</span>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/25">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            <span>Active Run</span>
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-full border border-white/15">
+            <span>Example run</span>
           </div>
         </div>
 

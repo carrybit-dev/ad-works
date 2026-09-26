@@ -24,7 +24,6 @@ const Footer = dynamic(() => import('@/components/Footer'));
 // ৩. ইন্টারেক্টিভ মডাল এবং উইজেট (প্রয়োজনের সময় লোড হবে)
 const BookingModal = dynamic(() => import('@/components/BookingModal'), { ssr: false });
 const CommandMenu = dynamic(() => import('@/components/CommandMenu'), { ssr: false });
-const LiveActivityToast = dynamic(() => import('@/components/LiveActivityToast'), { ssr: false });
 const QuickChatWidget = dynamic(() => import('@/components/QuickChatWidget'), { ssr: false });
 
 export default function Home() {
@@ -32,21 +31,16 @@ export default function Home() {
   const [commandMenuOpen, setCommandMenuOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState('Growth Promotion ($45)');
 
-  // Forced Reflow এড়াতে requestAnimationFrame ব্যবহার করে স্ক্রোল হ্যান্ডলিং
+  // Global ⌘K / Ctrl+K opens the command menu (advertised in the menu footer)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if ('scrollRestoration' in window.history) {
-        window.history.scrollRestoration = 'manual';
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCommandMenuOpen((open) => !open);
       }
-
-      requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
-      });
-
-      if (window.location.hash) {
-        window.history.replaceState(null, '', window.location.pathname);
-      }
-    }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const handleOpenBooking = (pkg?: string) => {
@@ -102,7 +96,6 @@ export default function Home() {
       )}
 
       {/* Real-time Overlays */}
-      <LiveActivityToast />
       <QuickChatWidget />
     </main>
   );

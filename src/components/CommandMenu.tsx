@@ -33,9 +33,11 @@ export default function CommandMenu({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      // Global open is handled in page.tsx; only close from here to avoid
+      // immediately closing the menu on the same keypress that opened it.
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        onClose();
+        if (isOpen) onClose();
       }
       if (e.key === 'Escape' && isOpen) {
         onClose();
@@ -96,6 +98,9 @@ export default function CommandMenu({
     <div
       onClick={onClose}
       className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-xl flex items-start justify-center pt-24 px-4 sm:px-6 animate-fadeIn"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command menu"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -110,6 +115,7 @@ export default function CommandMenu({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a command, case study, or jump to section..."
+            aria-label="Search commands"
             className="flex-grow bg-transparent text-white text-sm focus:outline-none placeholder:text-slate-500 font-sans"
           />
           <kbd className="hidden sm:inline-block px-2 py-0.5 rounded bg-white/10 text-[10px] font-mono text-slate-400">

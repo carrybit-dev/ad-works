@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Check, ArrowRight, Zap, Sparkles } from 'lucide-react';
+import { Check, ArrowRight, Zap } from 'lucide-react';
 
 interface PricingTiersProps {
   onOpenBooking: (pkg: string) => void;
@@ -17,7 +17,7 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
       name: 'Starter Promotion',
       price: billingMode === 'single' ? 20 : 16,
       period: billingMode === 'single' ? '/ campaign' : '/ video (4 runs)',
-      desc: '~1,000 targeted Google Ads views over 3 days. Best for testing a video’s audience pull before scaling up budget.',
+      desc: 'Best for testing a video’s audience pull before scaling up budget.',
       features: [
         '~1,000 Real Google Ads Views',
         '3-Day Rapid Delivery Window',
@@ -26,7 +26,7 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
         '100% Monetization & AdSense Safe',
       ],
       popular: false,
-      buttonText: 'Select Starter ($20)',
+      buttonText: `Select Starter ($${billingMode === 'single' ? 20 : 16})`,
     },
     {
       id: 'growth',
@@ -44,7 +44,7 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
         'Priority Direct Creator Email Support',
       ],
       popular: true,
-      buttonText: 'Select Growth ($45) →',
+      buttonText: `Select Growth ($${billingMode === 'single' ? 45 : 36}) →`,
     },
     {
       id: 'advanced',
@@ -61,7 +61,7 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
         'Daily Campaign Pacing & Ad Group Tuning',
       ],
       popular: false,
-      buttonText: 'Select Advanced ($105)',
+      buttonText: `Select Advanced ($${billingMode === 'single' ? 105 : 84})`,
     },
   ];
 
@@ -73,7 +73,7 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF4229]/10 border border-[#FF4229]/30 text-[#FFA58A] font-mono text-xs mb-4">
             <Zap className="w-3.5 h-3.5" />
-            <span>01 · CAMPAIGN PACKAGES</span>
+            <span>05 · CAMPAIGN PACKAGES</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             Three Campaign Sizes. One Goal —{' '}
@@ -82,7 +82,7 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
             </span>
           </h2>
           <p className="text-sm sm:text-base text-slate-300">
-            Every package targets a single YouTube upload with hyper-focused Google Ads traffic matched directly to your video's genre, topic, and competitor channels.
+            Every package targets a single YouTube upload with hyper-focused Google Ads traffic matched directly to your video&apos;s genre, topic, and competitor channels.
           </p>
 
           {/* Billing Switcher Toggle */}

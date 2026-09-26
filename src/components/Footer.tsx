@@ -77,7 +77,6 @@ export default function Footer({ onOpenBooking }: FooterProps) {
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-400">
               <li><a href="#services" className="hover:text-white transition-colors">Campaign Packages</a></li>
-              <li><a href="#calculator" className="hover:text-white transition-colors">Reach Calculator</a></li>
               <li><a href="#proofs" className="hover:text-white transition-colors">16 Case Studies</a></li>
               <li><a href="#why-us" className="hover:text-white transition-colors">Architecture Engine</a></li>
               <li><a href="#tracker" className="hover:text-white transition-colors">Live Order Tracker</a></li>

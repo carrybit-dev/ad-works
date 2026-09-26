@@ -4,7 +4,8 @@ import { CalculationResult } from '@/types';
 export async function POST(request: Request) {
   try {
     const { budget } = await request.json();
-    const b = Math.max(15, Number(budget) || 45);
+    // Clamp to a sane range: $15 minimum, $10k maximum.
+    const b = Math.min(10000, Math.max(15, Number(budget) || 45));
 
     let views = 0;
     let watchTime = 0;

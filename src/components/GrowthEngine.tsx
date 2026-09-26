@@ -38,7 +38,7 @@ export default function GrowthEngine() {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs mb-4">
             <Cpu className="w-3.5 h-3.5" />
-            <span>05 · ALGORITHMIC ARCHITECTURE</span>
+            <span>07 · ALGORITHMIC ARCHITECTURE</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             Why Our Growth <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">Holds Up Long-Term</span>

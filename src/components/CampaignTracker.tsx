@@ -3,13 +3,21 @@
 import React, { useState } from 'react';
 import { Search, CheckCircle2, Clock, Activity, AlertCircle } from 'lucide-react';
 
-const SHEETDB_URL = 'https://sheetdb.io/api/v1/nxbc1gqqb06xi';
+interface TrackerResult {
+  orderId: string;
+  status: 'PENDING' | 'ACTIVE' | 'COMPLETED';
+  isPending: boolean;
+  targetViews: number;
+  viewsDelivered: number;
+  progressPercentage: number;
+  attribution: string;
+  stages: { name: string; status: 'done' | 'in_progress' | 'pending'; date: string }[];
+}
 
 export default function CampaignTracker() {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<TrackerResult | null>(null);
   const [error, setError] = useState('');
 
   const handleTrack = async (e: React.FormEvent) => {
@@ -22,36 +30,30 @@ export default function CampaignTracker() {
     setResult(null);
 
     try {
-      let res = await fetch(`${SHEETDB_URL}/search?orderId=${encodeURIComponent(cleanQuery)}`);
-      let data = await res.json();
+      // Looked up server-side so the SheetDB API key never reaches the browser.
+      const res = await fetch('/api/campaign-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: cleanQuery }),
+      });
+      const data = await res.json();
 
-      if (!data || !Array.isArray(data) || data.length === 0) {
-        res = await fetch(`${SHEETDB_URL}/search?videoUrl=${encodeURIComponent(cleanQuery)}`);
-        data = await res.json();
-      }
-
-      if (!data || !Array.isArray(data) || data.length === 0) {
-        setError('No campaign found for this Order ID or video URL.');
+      if (!res.ok || !data.success) {
+        setError(data.error || 'No campaign found for this Order ID or video URL.');
         return;
       }
 
-      const row = data[0];
-      const target = Number(String(row.targetViews || '0').replace(/[^0-9]/g, '')) || 2500;
-      const delivered = Number(String(row.viewsDelivered || '0').replace(/[^0-9]/g, '')) || 0;
-      
-      let progress = 0;
-      if (row.progressPercentage !== undefined && row.progressPercentage !== null && row.progressPercentage !== '') {
-        progress = Number(String(row.progressPercentage).replace(/[^0-9]/g, '')) || 0;
-      } else {
-        progress = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
-      }
+      const row = data.campaign;
+      const target: number = row.targetViews;
+      const delivered: number = row.viewsDelivered;
+      const progress: number = row.progressPercentage;
 
-      const rawStatus = (row.status || 'PENDING').toUpperCase();
+      const rawStatus = String(row.status || 'PENDING').toUpperCase();
       const isPending = rawStatus.includes('PEND');
       const isCompleted = rawStatus === 'COMPLETED' || progress >= 100;
 
       setResult({
-        orderId: row.orderId || cleanQuery,
+        orderId: row.orderId,
         status: isPending ? 'PENDING' : (isCompleted ? 'COMPLETED' : 'ACTIVE'),
         isPending,
         targetViews: target,
@@ -59,7 +61,7 @@ export default function CampaignTracker() {
         progressPercentage: progress,
         attribution: isPending
           ? 'Intake verification in progress • Awaiting manual confirmation'
-          : (row.attribution || 'In-Feed Google Ads (70%) • Audience Matching (30%)'),
+          : row.attribution,
         stages: [
           { 
             name: '1. Video & Compliance Audit', 
@@ -90,10 +92,6 @@ export default function CampaignTracker() {
     }
   };
 
-  const handleSample = (id: string) => {
-    setQuery(id);
-  };
-
   return (
     <section id="tracker" className="py-24 relative border-t border-white/10">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
@@ -101,7 +99,7 @@ export default function CampaignTracker() {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 font-mono text-xs mb-4">
             <Activity className="w-3.5 h-3.5" />
-            <span>04 · LIVE CAMPAIGN TRACKING PORTAL</span>
+            <span>06 · LIVE CAMPAIGN TRACKING PORTAL</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             Track Your YouTube <span className="bg-gradient-to-r from-indigo-300 to-indigo-500 bg-clip-text text-transparent">Delivery in Real-Time</span>
@@ -121,6 +119,7 @@ export default function CampaignTracker() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Enter Order ID (e.g. FAW-94821) or video URL..."
+                aria-label="Order ID or video URL"
                 className="w-full pl-12 pr-4 py-3.5 rounded-full bg-black/40 border border-white/15 text-white text-sm focus:outline-none focus:border-[#FF4229] transition-colors"
               />
             </div>
@@ -133,24 +132,10 @@ export default function CampaignTracker() {
             </button>
           </form>
 
-          {/* Sample quick pills */}
-          <div className="flex flex-wrap items-center gap-2 mt-4 text-xs font-mono text-slate-400">
-            <span>Try sample ID:</span>
-            <button
-              type="button"
-              onClick={() => handleSample('FAW-94821')}
-              className="px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-emerald-400 border border-white/10"
-            >
-              FAW-94821 (Completed)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSample('FAW-83912')}
-              className="px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-blue-400 border border-white/10"
-            >
-              FAW-83912 (Active)
-            </button>
-          </div>
+          {/* Helper hint */}
+          <p className="mt-4 text-xs font-mono text-slate-500">
+            Find your Order ID in the booking confirmation shown after you start a campaign.
+          </p>
 
           {error && (
             <div className="mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
@@ -206,7 +191,7 @@ export default function CampaignTracker() {
 
               {/* Milestones Stages */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                {result.stages?.map((stage: any, idx: number) => (
+                {result.stages.map((stage, idx) => (
                   <div
                     key={idx}
                     className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between text-xs"

@@ -14,7 +14,7 @@ export default function QuickChatWidget() {
     const message = encodeURIComponent(
       "Hello AdWorks Team, I'm reviewing your Google Ads YouTube growth campaigns. I'd like to consult on placement strategy for my channel."
     );
-    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank', 'noopener,noreferrer');
   };
 
   const handleEmail = () => {
@@ -39,14 +39,14 @@ export default function QuickChatWidget() {
                 <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#FF4229] to-[#FF7A50] flex items-center justify-center font-bold text-xs text-white shadow-md font-mono">
                   AW
                 </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-[#0E1422] rounded-full animate-pulse" />
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-slate-500 border-2 border-[#0E1422] rounded-full" />
               </div>
               <div>
                 <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
                   AdWorks Campaign Desk
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                 </h4>
-                <p className="text-[10px] font-mono text-emerald-400">Desk Online • Live Assistance</p>
+                <p className="text-[10px] font-mono text-slate-400">Message us — we reply personally</p>
               </div>
             </div>
             <button
@@ -71,9 +71,9 @@ export default function QuickChatWidget() {
             >
               <div className="flex items-center gap-2">
                 <Send className="w-3.5 h-3.5" />
-                <span>Live WhatsApp Desk</span>
+                <span>WhatsApp Desk</span>
               </div>
-              <span className="text-[10px] font-mono opacity-80">Instant Reply</span>
+              <span className="text-[10px] font-mono opacity-80">Opens WhatsApp</span>
             </button>
 
             <button

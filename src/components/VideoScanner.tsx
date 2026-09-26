@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Zap, CheckCircle2, ArrowRight, Activity, Flame, ShieldCheck, Tag, Users, AlertCircle } from 'lucide-react';
+import { Search, Zap, ArrowRight, Activity, Flame, Tag, Users, AlertCircle } from 'lucide-react';
 
 interface VideoScannerProps {
   onOpenBooking: (pkg?: string) => void;
@@ -40,10 +40,10 @@ export default function VideoScanner({ onOpenBooking }: VideoScannerProps) {
   const [error, setError] = useState('');
 
   const stages = [
-    'Connecting to YouTube API & fetching video metadata...',
-    'Analyzing Title CTR hook & curiosity gap vectors...',
-    'Scraping high-affinity competitor in-feed placement pools...',
-    'Simulating watch session velocity & organic browse multipliers...',
+    'Fetching public video metadata from YouTube...',
+    'Analyzing title hooks & keyword fit...',
+    'Benchmarking against niche baselines...',
+    'Estimating campaign readiness score...',
   ];
 
   const handleScan = async (e: React.FormEvent) => {
@@ -95,13 +95,13 @@ export default function VideoScanner({ onOpenBooking }: VideoScannerProps) {
         <div className="text-center max-w-2xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF4229]/10 border border-[#FF4229]/30 text-[#FFA58A] font-mono text-xs mb-4">
             <Zap className="w-3.5 h-3.5 text-[#FF7A50]" />
-            <span>REAL-TIME YOUTUBE AUDIT ENGINE</span>
+            <span>01 · REAL-TIME YOUTUBE AUDIT ENGINE</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             Audit Any YouTube Video <span className="bg-gradient-to-r from-white via-slate-100 to-[#FF8A66] bg-clip-text text-transparent">In Real-Time</span>
           </h2>
           <p className="text-sm sm:text-base text-slate-300">
-            Paste any public YouTube URL. Our engine fetches real channel metadata, tests Title CTR friction, maps real competitor in-feed placements, and computes custom Google Ads targeting.
+            Paste any public YouTube URL. Our engine fetches real video metadata from YouTube, scores the title&apos;s click-through potential against niche benchmarks, and estimates how ready the video is for a paid promotion run.
           </p>
         </div>
 
@@ -124,6 +124,7 @@ export default function VideoScanner({ onOpenBooking }: VideoScannerProps) {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="Paste real YouTube Video URL (e.g. https://youtube.com/watch?v=...)"
+                aria-label="YouTube video URL"
                 className="w-full pl-12 pr-4 py-3.5 rounded-full bg-black/40 border border-white/15 text-white text-sm focus:outline-none focus:border-[#FF4229] transition-colors"
               />
             </div>
@@ -198,7 +199,7 @@ export default function VideoScanner({ onOpenBooking }: VideoScannerProps) {
                     className="w-full h-full object-cover"
                   />
                   <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-mono text-white">
-                    LIVE
+                    REAL
                   </span>
                 </div>
 
@@ -219,11 +220,11 @@ export default function VideoScanner({ onOpenBooking }: VideoScannerProps) {
 
                 {/* Score badge */}
                 <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-black/40 border border-white/10 shrink-0">
-                  <div className="text-2xl font-black font-mono text-emerald-400 leading-none">
+                  <div className={`text-2xl font-black font-mono leading-none ${auditResult.overallScore >= 80 ? 'text-emerald-400' : auditResult.overallScore >= 60 ? 'text-amber-400' : 'text-rose-400'}`}>
                     {auditResult.overallScore}%
                   </div>
-                  <div className="text-[10px] font-mono text-slate-400 mt-0.5">Algorithm Grade</div>
-                  <span className="mt-1 px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold">
+                  <div className="text-[10px] font-mono text-slate-400 mt-0.5">Readiness Score</div>
+                  <span className={`mt-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold ${auditResult.overallScore >= 80 ? 'bg-emerald-500/20 text-emerald-400' : auditResult.overallScore >= 60 ? 'bg-amber-500/20 text-amber-400' : 'bg-rose-500/20 text-rose-400'}`}>
                     Grade {auditResult.grade}
                   </span>
                 </div>
@@ -289,7 +290,7 @@ export default function VideoScanner({ onOpenBooking }: VideoScannerProps) {
                     <span>Recommended Campaign: Growth Run ($45)</span>
                   </div>
                   <p className="text-xs text-slate-300 mt-1">
-                    Projected Reach: <strong className="text-emerald-400">{auditResult.estimatedReach.growth.views}</strong> over 7 days.
+                    Estimated Reach: <strong className="text-emerald-400">{auditResult.estimatedReach.growth.views}</strong> over 7 days.
                   </p>
                 </div>
 

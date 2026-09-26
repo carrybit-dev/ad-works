@@ -1,12 +1,31 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, Sparkles, Mail, Copy, Check, Clock } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { X, Sparkles, Mail, Copy, Check, Clock } from 'lucide-react';
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultPackage: string;
+}
+
+const PACKAGE_OPTIONS = [
+  'Starter Promotion ($20)',
+  'Growth Promotion ($45)',
+  'Advanced Promotion ($105)',
+  'Custom Campaign ($250+)',
+];
+
+// Callers append context like "Growth Promotion ($45) - <video title>"; map any
+// such string back onto one of the real select options so the dropdown never
+// renders blank.
+function normalizePackage(pkg: string): string {
+  if (PACKAGE_OPTIONS.includes(pkg)) return pkg;
+  if (pkg.includes('Starter')) return PACKAGE_OPTIONS[0];
+  if (pkg.includes('Growth')) return PACKAGE_OPTIONS[1];
+  if (pkg.includes('Advanced')) return PACKAGE_OPTIONS[2];
+  if (pkg.includes('Custom')) return PACKAGE_OPTIONS[3];
+  return PACKAGE_OPTIONS[1];
 }
 
 export default function BookingModal({
@@ -15,7 +34,7 @@ export default function BookingModal({
   defaultPackage,
 }: BookingModalProps) {
   const [videoUrl, setVideoUrl] = useState('');
-  const [selectedPkg, setSelectedPkg] = useState(defaultPackage || 'Growth Promotion ($45)');
+  const [selectedPkg, setSelectedPkg] = useState(() => normalizePackage(defaultPackage || 'Growth Promotion ($45)'));
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,20 +48,27 @@ export default function BookingModal({
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (defaultPackage) {
-      setSelectedPkg(defaultPackage);
-    }
-  }, [defaultPackage]);
-
-  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
-      setConfirmedCampaign(null);
-      setError('');
     }
   }, [isOpen]);
+
+  const handleClose = useCallback(() => {
+    setConfirmedCampaign(null);
+    setError('');
+    onClose();
+  }, [onClose]);
+
+  // Escape closes the modal
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [handleClose]);
 
   if (!isOpen) return null;
 
@@ -51,58 +77,33 @@ export default function BookingModal({
     setError('');
     setLoading(true);
 
-    const newOrderId = `FAW-${Math.floor(10000 + Math.random() * 90000)}`;
-
-    let target = 2500;
-    if (selectedPkg.includes('Starter')) target = 1000;
-    else if (selectedPkg.includes('Growth')) target = 2500;
-    else if (selectedPkg.includes('Advanced')) target = 8000;
-    else if (selectedPkg.includes('Custom')) target = 20000;
-
-    // Current Date formatting (e.g. "20-Sep-2026")
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    }).replace(/ /g, '-');
-
     try {
-      const res = await fetch('https://sheetdb.io/api/v1/nxbc1gqqb06xi', {
+      // Book via the server route — the SheetDB key must never ship to the browser.
+      const res = await fetch('/api/track', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          data: [
-            {
-              orderId: newOrderId,
-              videoUrl: videoUrl.trim(),
-              status: 'PENDING',
-              targetViews: target,
-              viewsDelivered: 0,
-              progressPercentage: 0,
-              attribution: 'In Intake Queue • Awaiting Compliance Audit',
-              packageName: selectedPkg,
-              orderDate: formattedDate,
-              notes: notes.trim() || 'None',
-              paymentStatus: 'UNPAID',
-            },
-          ],
+          videoUrl: videoUrl.trim(),
+          packageName: selectedPkg,
+          notes: notes.trim() || 'None',
         }),
       });
 
-      if (res.ok) {
+      const data = await res.json();
+
+      if (res.ok && data.success) {
         setConfirmedCampaign({
-          id: newOrderId,
-          videoUrl,
-          packageName: selectedPkg,
-          targetViews: target,
+          id: data.campaign.id,
+          videoUrl: data.campaign.videoUrl,
+          packageName: data.campaign.packageName,
+          targetViews: data.campaign.targetViews,
           notes,
         });
       } else {
-        setError('Failed to record order. Please try again or reach out directly.');
+        setError(data.error || 'Failed to record order. Please try again or reach out directly.');
       }
     } catch {
       setError('Connection error. Please try again.');
@@ -113,7 +114,7 @@ export default function BookingModal({
 
   const handleCopyOrder = () => {
     if (!confirmedCampaign) return;
-    navigator.clipboard.writeText(confirmedCampaign.id);
+    navigator.clipboard.writeText(confirmedCampaign.id).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -134,17 +135,18 @@ export default function BookingModal({
 
   return (
     <div
-      onClick={onClose}
+      onClick={handleClose}
       className="fixed inset-0 z-[160] bg-black/85 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 animate-fadeIn"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="booking-modal-title"
     >
       <div
         onClick={(e) => e.stopPropagation()}
         className="relative max-w-lg w-full rounded-3xl bg-[#0E1422] border border-white/20 p-6 sm:p-8 shadow-2xl animate-scaleUp"
       >
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-6 right-6 p-2 rounded-full text-slate-400 hover:text-white bg-white/5"
           aria-label="Close"
         >
@@ -157,7 +159,7 @@ export default function BookingModal({
               <Sparkles className="w-4 h-4" />
               <span>Full-Stack Campaign Intake</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+            <h3 id="booking-modal-title" className="text-xl sm:text-2xl font-bold text-white mb-2">
               Start Your Campaign
             </h3>
             <p className="text-xs sm:text-sm text-slate-400 mb-6">
@@ -166,12 +168,14 @@ export default function BookingModal({
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-mono uppercase text-slate-300 mb-2">
+                <label htmlFor="booking-video-url" className="block text-xs font-mono uppercase text-slate-300 mb-2">
                   YouTube Video Link <span className="text-[#FF4229]">*</span>
                 </label>
                 <input
+                  id="booking-video-url"
                   type="url"
                   required
+                  autoFocus
                   placeholder="https://youtube.com/watch?v=..."
                   value={videoUrl}
                   onChange={(e) => setVideoUrl(e.target.value)}
@@ -180,10 +184,11 @@ export default function BookingModal({
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-slate-300 mb-2">
+                <label htmlFor="booking-package" className="block text-xs font-mono uppercase text-slate-300 mb-2">
                   Campaign Package
                 </label>
                 <select
+                  id="booking-package"
                   value={selectedPkg}
                   onChange={(e) => setSelectedPkg(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-[#0A0D15] border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF4229]"
@@ -196,10 +201,11 @@ export default function BookingModal({
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase text-slate-300 mb-2">
+                <label htmlFor="booking-notes" className="block text-xs font-mono uppercase text-slate-300 mb-2">
                   Target Niche / Competitor Channels (Optional)
                 </label>
                 <input
+                  id="booking-notes"
                   type="text"
                   placeholder="e.g. Gaming longplays, Travel vlogs, Indie Music"
                   value={notes}
@@ -265,7 +271,7 @@ export default function BookingModal({
                 <span>Confirm & Send Details Via Email</span>
               </button>
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="w-full py-2.5 rounded-full border border-white/10 text-slate-300 text-xs font-mono hover:bg-white/5"
               >
                 Close Window

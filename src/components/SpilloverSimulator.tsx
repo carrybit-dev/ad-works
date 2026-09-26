@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BarChart3, TrendingUp, Sparkles, ArrowRight, Zap, Play } from 'lucide-react';
+import { TrendingUp, ArrowRight } from 'lucide-react';
 
 interface SpilloverSimulatorProps {
   onOpenBooking: (pkg?: string) => void;
@@ -14,10 +14,30 @@ export default function SpilloverSimulator({ onOpenBooking }: SpilloverSimulator
   // Multiplier logic based on video length & session retention
   const lengthMultiplier = videoLength === 'short' ? 0.7 : videoLength === 'medium' ? 1.05 : 1.45;
 
-  const paidViews = budget <= 20 ? Math.round(budget * 50) : budget <= 45 ? Math.round(1000 + (budget - 20) * 60) : Math.round(2500 + (budget - 45) * 91.6);
+  // Paid-view curve must match the canonical estimator in /api/calculate so
+  // every widget on the page quotes the same numbers.
+  const paidViews =
+    budget <= 20
+      ? Math.round(budget * 50)
+      : budget <= 45
+        ? Math.round(1000 + (budget - 20) * 60)
+        : budget <= 105
+          ? Math.round(2500 + (budget - 45) * 91.6)
+          : Math.round(8000 + (budget - 105) * 85);
   const organicSpillover = Math.round(paidViews * lengthMultiplier);
   const totalViews = paidViews + organicSpillover;
   const organicPercentage = Math.round((organicSpillover / totalViews) * 100);
+
+  // Map the slider budget onto a real package so the booking modal records the
+  // correct target views (it keys off the package name).
+  const packageForBudget =
+    budget <= 20
+      ? 'Starter Promotion ($20)'
+      : budget <= 45
+        ? 'Growth Promotion ($45)'
+        : budget <= 105
+          ? 'Advanced Promotion ($105)'
+          : 'Custom Campaign ($250+)';
 
   return (
     <section id="spillover" className="py-24 relative border-t border-white/10 z-10">
@@ -32,7 +52,7 @@ export default function SpilloverSimulator({ onOpenBooking }: SpilloverSimulator
             Paid Ads Trigger <span className="bg-gradient-to-r from-[#FF8A66] via-white to-emerald-400 bg-clip-text text-transparent">Free Organic Spillover</span>
           </h2>
           <p className="text-sm sm:text-base text-slate-300">
-            When authentic viewers watch for multiple minutes, YouTube’s recommendation engine promotes your upload for free across Browse &amp; Suggested Watch Next.
+            When authentic viewers watch for multiple minutes, YouTube’s recommendation engine <em>can</em> promote your upload for free across Browse &amp; Suggested Watch Next. Figures below are illustrative estimates, not guarantees.
           </p>
         </div>
 
@@ -52,6 +72,7 @@ export default function SpilloverSimulator({ onOpenBooking }: SpilloverSimulator
                 </div>
                 <input
                   type="range"
+                  aria-label="Campaign budget in dollars"
                   min="20"
                   max="200"
                   step="5"
@@ -131,7 +152,7 @@ export default function SpilloverSimulator({ onOpenBooking }: SpilloverSimulator
                 </div>
                 <div className="flex justify-between text-[11px] font-mono">
                   <span className="text-[#FFA58A]">■ In-Feed Ad: {paidViews.toLocaleString()} ({100 - organicPercentage}%)</span>
-                  <span className="text-emerald-400">■ Organic Spillover: +{organicSpillover.toLocaleString()} ({organicPercentage}%)</span>
+                  <span className="text-emerald-400">■ Est. Organic Spillover: +{organicSpillover.toLocaleString()} ({organicPercentage}%)</span>
                 </div>
               </div>
 
@@ -141,7 +162,7 @@ export default function SpilloverSimulator({ onOpenBooking }: SpilloverSimulator
               </div>
 
               <button
-                onClick={() => onOpenBooking(`Growth Promotion ($${budget})`)}
+                onClick={() => onOpenBooking(packageForBudget)}
                 className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#FF4229] to-[#FF7A50] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg hover:scale-105 transition-all"
               >
                 <span>Deploy This Run (${budget})</span>

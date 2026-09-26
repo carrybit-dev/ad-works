@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight, ShieldCheck, CheckCircle2, Sparkles, TrendingUp } from 'lucide-react';
+import { ArrowRight, ShieldCheck, CheckCircle2, Sparkles } from 'lucide-react';
 import StudioMockup from './StudioMockup';
 
 interface HeroProps {

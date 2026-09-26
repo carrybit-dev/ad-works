@@ -1,15 +1,40 @@
 import { NextResponse } from 'next/server';
 
-const SHEETDB_URL = 'https://sheetdb.io/api/v1/nxbc1gqqb06xi';
+// Server-side only. Set SHEETDB_API_URL in the hosting environment.
+// Falls back to the legacy key so existing deployments keep working, but the
+// key must be rotated in the SheetDB dashboard since it was previously public.
+const SHEETDB_URL = process.env.SHEETDB_API_URL || 'https://sheetdb.io/api/v1/nxbc1gqqb06xi';
+
+function isYouTubeUrl(url: string): boolean {
+  try {
+    const u = new URL(url.trim());
+    const host = u.hostname.replace(/^www\./, '').replace(/^m\./, '');
+    return (
+      host === 'youtube.com' ||
+      host === 'youtu.be' ||
+      host === 'youtube-nocookie.com' ||
+      host.endsWith('.youtube.com')
+    );
+  } catch {
+    return false;
+  }
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { videoUrl, packageName, notes } = body;
 
-    if (!videoUrl) {
+    if (!videoUrl || typeof videoUrl !== 'string') {
       return NextResponse.json(
         { success: false, error: 'YouTube Video URL is required.' },
+        { status: 400 }
+      );
+    }
+
+    if (!isYouTubeUrl(videoUrl)) {
+      return NextResponse.json(
+        { success: false, error: 'Please provide a valid YouTube video URL (youtube.com or youtu.be).' },
         { status: 400 }
       );
     }
@@ -25,14 +50,23 @@ export async function POST(request: Request) {
     else if (packageName?.includes('Custom')) targetViews = 20000;
 
     // 3. SheetDB-te Notun Row Insert kora
+    const today = new Date();
+    const formattedDate = today
+      .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+      .replace(/ /g, '-');
+
     const sheetData = {
       orderId: orderId,
-      videoUrl: videoUrl,
-      status: 'ACTIVE',
+      videoUrl: videoUrl.trim(),
+      packageName: packageName || '',
+      status: 'PENDING',
       targetViews: targetViews,
       viewsDelivered: 0,
       progressPercentage: 0,
-      attribution: 'In-Feed Google Ads (70%) • Audience Matching (30%)'
+      attribution: 'In Intake Queue • Awaiting Compliance Audit',
+      orderDate: formattedDate,
+      notes: typeof notes === 'string' ? notes.trim().slice(0, 500) : '',
+      paymentStatus: 'UNPAID',
     };
 
     const sheetRes = await fetch(SHEETDB_URL, {
@@ -53,10 +87,10 @@ export async function POST(request: Request) {
       success: true,
       campaign: {
         id: orderId,
-        videoUrl: videoUrl,
+        videoUrl: videoUrl.trim(),
         packageName: packageName,
         targetViews: targetViews,
-        status: 'ACTIVE',
+        status: 'PENDING',
         notes: notes || ''
       }
     });

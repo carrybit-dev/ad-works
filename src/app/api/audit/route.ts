@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   try {
     const { videoUrl } = await request.json();
 
-    if (!videoUrl) {
+    if (!videoUrl || typeof videoUrl !== 'string') {
       return NextResponse.json({ success: false, error: 'Please enter a YouTube video URL.' }, { status: 400 });
     }
 
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
     // Call official public YouTube OEmbed API (Zero API keys needed, 100% real and authentic)
     const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-    const response = await fetch(oembedUrl);
+    const response = await fetch(oembedUrl, { signal: AbortSignal.timeout(8000) });
 
     if (!response.ok) {
       return NextResponse.json(
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
     const oembedData = await response.json();
     const title = oembedData.title || 'Untitled YouTube Video';
     const authorName = oembedData.author_name || 'YouTube Creator';
-    const authorUrl = oembedData.author_url || `https://youtube.com/channel/`;
+    const authorUrl = oembedData.author_url || `https://www.youtube.com/results?search_query=${encodeURIComponent(authorName)}`;
     const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 
     // Real Heuristic & NLP Title Analysis
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
 
     // Detect Genre / Niche from title
     let detectedNicheKey = 'entertainment';
-    if (lowerTitle.includes('game') || lowerTitle.includes('play') || lowerTitle.includes('walkthrough') || lowerTitle.includes('drew') || lowerTitle.includes('boss') || lowerTitle.includes('mod')) {
+    if (lowerTitle.includes('game') || lowerTitle.includes('play') || lowerTitle.includes('walkthrough') || lowerTitle.includes('boss') || lowerTitle.includes('mod')) {
       detectedNicheKey = 'gaming';
     } else if (lowerTitle.includes('music') || lowerTitle.includes('song') || lowerTitle.includes('audio') || lowerTitle.includes('track') || lowerTitle.includes('album') || lowerTitle.includes('beat')) {
       detectedNicheKey = 'music';
@@ -152,9 +152,15 @@ export async function POST(request: Request) {
 
     const targetKeywords = Array.from(new Set([...cleanTokens, ...nicheProfile.keywords])).slice(0, 7);
 
-    // Compute Overall Algorithmic Readiness Score
-    const overallScore = Math.min(98, Math.max(82, Math.round((titleScore + 94) / 2)));
-    const grade = overallScore >= 93 ? 'A+' : overallScore >= 88 ? 'A' : 'B+';
+    // Compute Overall Algorithmic Readiness Score (honest range — weak titles
+    // must be able to score poorly, not bottom out at B+)
+    const overallScore = Math.min(98, Math.round((titleScore + 94) / 2));
+    const grade =
+      overallScore >= 93 ? 'A+' :
+      overallScore >= 88 ? 'A' :
+      overallScore >= 80 ? 'B+' :
+      overallScore >= 70 ? 'B' :
+      overallScore >= 60 ? 'C' : 'D';
 
     return NextResponse.json({
       success: true,
@@ -180,13 +186,19 @@ export async function POST(request: Request) {
           flagship: { budget: 105, views: '~8,000 - 16,000 Views', days: '30 Days' },
         },
         organicBrowseMultiplier: '+1.8x to +2.4x Watch Session Compounding',
-        monetizationCompliance: '100% Policy Compliant · AdSense Safe',
+        monetizationCompliance: 'Paid Google Ads traffic is YouTube-compliant by design — no bots or click farms',
       },
     });
-  } catch {
+  } catch (err) {
+    const isTimeout = err instanceof Error && err.name === 'TimeoutError';
     return NextResponse.json(
-      { success: false, error: 'Failed to complete YouTube video audit. Please try again.' },
-      { status: 500 }
+      {
+        success: false,
+        error: isTimeout
+          ? 'YouTube took too long to respond. Please try again.'
+          : 'Failed to complete YouTube video audit. Please try again.',
+      },
+      { status: isTimeout ? 504 : 500 }
     );
   }
 }

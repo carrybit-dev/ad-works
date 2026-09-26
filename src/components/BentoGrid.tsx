@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Target, Activity, ShieldCheck, Globe, Terminal, CheckCircle2, AlertTriangle, Play } from 'lucide-react';
+import { Target, Activity, Globe, Terminal, Play } from 'lucide-react';
 
 export default function BentoGrid() {
   const [retentionMode, setRetentionMode] = useState<'ads' | 'bots'>('ads');
@@ -28,7 +28,7 @@ export default function BentoGrid() {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-xs mb-4">
             <Terminal className="w-3.5 h-3.5" />
-            <span>ENTERPRISE GOOGLE ADS ARCHITECTURE</span>
+            <span>02 · ENTERPRISE GOOGLE ADS ARCHITECTURE</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             The Algorithmic <span className="bg-gradient-to-r from-cyan-300 via-white to-cyan-500 bg-clip-text text-transparent">Bento Engine</span>
@@ -149,15 +149,14 @@ export default function BentoGrid() {
                 <span className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                   <Terminal className="w-5 h-5" />
                 </span>
-                <span className="text-xs font-mono text-emerald-400 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Google Ads MCC Stream</span>
+                <span className="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                  <span>Illustrative workflow</span>
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-2">Streaming MCC Logs</h3>
+              <h3 className="text-xl font-bold text-white mb-2">Inside a campaign run</h3>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
-                Direct programmatic integration with Alphabet’s official marketing API for optimal CPV pacing.
+                An illustrative example of the verification and pacing steps applied to a typical campaign run — not live account data.
               </p>
             </div>
 

@@ -2,14 +2,20 @@
 
 import React from 'react';
 import { Activity, Play, Zap, CheckCircle2 } from 'lucide-react';
+import { caseStudies } from '@/data/caseStudies';
+
+// Ticker items are derived from the site's own published case studies
+// (see #proofs section) — no invented figures.
+const icons = [CheckCircle2, Zap, Activity, Play];
+const colors = ['text-emerald-400', 'text-cyan-400', 'text-[#FF7A50]', 'text-emerald-400'];
 
 export default function SocialProofTicker() {
-  const events = [
-    { text: 'Gaming Longplay run completed (+153.2% views, 716 likes)', tag: 'Nancy Drew Series', icon: CheckCircle2, color: 'text-emerald-400' },
-    { text: 'Travel Vlog campaign approved by Google Ads MCC (Tier 1)', tag: 'Andalusia Vlog', icon: Zap, color: 'text-cyan-400' },
-    { text: 'Music Video campaign surpassed 15,500 views (+11,712%)', tag: 'Andy Warhol Track', icon: Activity, color: 'text-[#FF7A50]' },
-    { text: 'Entertainment analysis reached 4,611% audience growth surge', tag: 'Entertainment Channel', icon: Play, color: 'text-emerald-400' },
-  ];
+  const events = caseStudies.slice(0, 8).map((c, i) => ({
+    text: `${c.t} — ${c.bv} → ${c.av} views (${c.g})`,
+    tag: c.d + ' Run',
+    icon: icons[i % icons.length],
+    color: colors[i % colors.length],
+  }));
 
   return (
     <div className="w-full bg-[#03060C] border-y border-white/5 py-2.5 overflow-hidden font-mono text-xs text-slate-400 relative z-20">

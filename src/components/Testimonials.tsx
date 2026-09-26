@@ -38,7 +38,7 @@ export default function Testimonials() {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF4229]/10 border border-[#FF4229]/30 text-[#FFA58A] font-mono text-xs mb-4">
             <MessageSquareQuote className="w-3.5 h-3.5" />
-            <span>06 · CREATOR NOTES</span>
+            <span>08 · CREATOR NOTES</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             What Creators Say <span className="bg-gradient-to-r from-white via-slate-100 to-[#FF8A66] bg-clip-text text-transparent">After Their Run.</span>
