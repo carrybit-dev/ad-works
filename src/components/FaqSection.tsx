@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { HelpCircle, ChevronDown } from 'lucide-react';
+import { FIVERR_GIG_URL } from '@/data/links';
 
 export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -26,6 +27,23 @@ export default function FaqSection() {
     {
       q: 'Can I target specific countries or demographic niches?',
       a: 'Yes! We customize targeting based on your channel niche, language, and audience profile (e.g. US, UK, Canada, Australia, or worldwide). You can specify target locations and competitor channels when submitting your video.',
+    },
+    {
+      q: 'Can I order through Fiverr instead of booking directly?',
+      a: (
+        <>
+          Yes. The same three packages are listed on our{' '}
+          <a
+            href={FIVERR_GIG_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-300 underline underline-offset-2 hover:text-emerald-200"
+          >
+            Fiverr gig
+          </a>{' '}
+          with Fiverr&apos;s buyer protection. You get the exact same Google Ads campaign either way — booking direct just skips the marketplace fee.
+        </>
+      ),
     },
   ];
 
