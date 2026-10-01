@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { Play, Copy, Check, Mail, ArrowRight } from 'lucide-react';
+import { Copy, Check, Mail, ArrowRight } from 'lucide-react';
 
 interface FooterProps {
   onOpenBooking: (pkg?: string) => void;
@@ -56,9 +57,13 @@ export default function Footer({ onOpenBooking }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-white/10">
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF4229] to-[#FF7A50] flex items-center justify-center text-white">
-                <Play className="w-3.5 h-3.5 fill-white" />
-              </div>
+              <Image
+                src="/fardin-ad-works-logo.png"
+                alt="Fardin Ad Works logo"
+                width={32}
+                height={32}
+                className="w-8 h-8 rounded-lg"
+              />
               <span className="font-bold text-white text-base">FARDIN AD WORKS</span>
             </div>
             <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed">

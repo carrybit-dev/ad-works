@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Menu, X, Play, ArrowRight, Sparkles, Search } from 'lucide-react';
 
 interface NavbarProps {
@@ -54,9 +55,14 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
 
             {/* Brand */}
             <a href="#" className="flex items-center gap-3 text-white font-extrabold group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FF4229] to-[#FF7A50] flex items-center justify-center text-white shadow-[0_4px_16px_rgba(255,66,41,0.4)] group-hover:scale-105 transition-transform">
-                <Play className="w-4 h-4 fill-white translate-x-0.5" />
-              </div>
+              <Image
+                src="/fardin-ad-works-logo.png"
+                alt="Fardin Ad Works logo"
+                width={36}
+                height={36}
+                className="w-9 h-9 rounded-xl shadow-[0_4px_16px_rgba(255,66,41,0.4)] group-hover:scale-105 transition-transform"
+                priority
+              />
               <div className="flex flex-col">
                 <span className="text-sm sm:text-base font-extrabold tracking-tight leading-none text-white">
                   FARDIN AD WORKS
