@@ -18,6 +18,7 @@ const PricingTiers = dynamic(() => import('@/components/PricingTiers'));
 const CampaignTracker = dynamic(() => import('@/components/CampaignTracker'), { ssr: false });
 const GrowthEngine = dynamic(() => import('@/components/GrowthEngine'));
 const HowItWorks = dynamic(() => import('@/components/HowItWorks'));
+const AboutFardin = dynamic(() => import('@/components/AboutFardin'));
 const FaqSection = dynamic(() => import('@/components/FaqSection'));
 const Footer = dynamic(() => import('@/components/Footer'));
 
@@ -107,6 +108,7 @@ export default function Home() {
       <CampaignTracker />
       <GrowthEngine />
       <HowItWorks />
+      <AboutFardin />
       <FaqSection />
       <Footer onOpenBooking={handleOpenBooking} />
 
