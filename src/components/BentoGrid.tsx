@@ -114,7 +114,7 @@ export default function BentoGrid() {
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-2">Retention Curve Health</h3>
+              <h3 className="text-xl font-bold text-white mb-2">Real Viewers vs Bot Clicks</h3>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
                 See the contrast between human in-feed viewers vs cheap click-farms that ruin your video’s algorithmic trajectory.
               </p>
