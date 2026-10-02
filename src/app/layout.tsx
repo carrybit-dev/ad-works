@@ -29,7 +29,7 @@ export const metadata: Metadata = {
       'Laser-focused Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators.',
   },
   verification: {
-    google: 'N4FO4EW0WB_nsHQTn5zGCB7bT-YSagaLWcO6UwVTN98',
+    google: 'XHzngwsD8b7azaYV9DYJjhCUTEtDKELwCI1UUwVjrqU',
   },
 };
 
