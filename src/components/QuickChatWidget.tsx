@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MessageSquare, X, Mail, CheckCircle2, Send } from 'lucide-react';
+import { MessageSquare, X, Mail, CheckCircle2, Send, MessageCircle } from 'lucide-react';
 
 const SUPPORT_EMAIL = 'contact@fardintareque.com';
+const WHATSAPP_NUMBER = '8801341096067';
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi Fardin, I have a question about YouTube promotion.')}`;
 
 /**
  * Honest contact widget: a small form that opens the visitor's email client
@@ -98,6 +100,16 @@ export default function QuickChatWidget() {
               Opens your email app addressed to {SUPPORT_EMAIL}
             </p>
           </form>
+
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3.5 flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-2xl border border-[#25D366]/40 bg-[#25D366]/10 text-emerald-300 text-xs font-bold hover:bg-[#25D366]/20 transition-all"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>Chat on WhatsApp</span>
+          </a>
 
           <div className="mt-3.5 pt-2.5 border-t border-white/5 text-center">
             <a

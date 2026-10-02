@@ -17,6 +17,7 @@ const CaseStudies = dynamic(() => import('@/components/CaseStudies'));
 const PricingTiers = dynamic(() => import('@/components/PricingTiers'));
 const CampaignTracker = dynamic(() => import('@/components/CampaignTracker'), { ssr: false });
 const GrowthEngine = dynamic(() => import('@/components/GrowthEngine'));
+const HowItWorks = dynamic(() => import('@/components/HowItWorks'));
 const FaqSection = dynamic(() => import('@/components/FaqSection'));
 const Footer = dynamic(() => import('@/components/Footer'));
 
@@ -105,6 +106,7 @@ export default function Home() {
       <PricingTiers onOpenBooking={handleOpenBooking} />
       <CampaignTracker />
       <GrowthEngine />
+      <HowItWorks />
       <FaqSection />
       <Footer onOpenBooking={handleOpenBooking} />
 
