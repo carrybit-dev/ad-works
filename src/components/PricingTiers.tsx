@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Check, ArrowRight, Zap } from 'lucide-react';
+import { Check, ArrowRight, Zap, ExternalLink } from 'lucide-react';
+import { FIVERR_GIG_URL } from '@/data/links';
 
 interface PricingTiersProps {
   onOpenBooking: (pkg: string) => void;
@@ -180,6 +181,22 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Fiverr alternative — secondary trust path, keeps direct booking primary */}
+        <div className="mt-10 text-center">
+          <p className="text-xs sm:text-sm text-slate-400 mb-3">
+            Prefer ordering through a marketplace? The same packages are on Fiverr with buyer protection.
+          </p>
+          <a
+            href={FIVERR_GIG_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#1DBF73]/40 bg-[#1DBF73]/10 text-emerald-300 text-sm font-semibold hover:bg-[#1DBF73]/20 hover:border-[#1DBF73]/60 transition-all"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Also on Fiverr
+          </a>
         </div>
 
       </div>
