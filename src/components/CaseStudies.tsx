@@ -63,7 +63,7 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
             Before / After on <span className="bg-gradient-to-r from-white via-slate-100 to-[#FF8A66] bg-clip-text text-transparent">Every Metric That Counts.</span>
           </h2>
           <p className="text-sm sm:text-base text-slate-300">
-            Unedited metrics pulled straight from real YouTube Studio dashboards — verified views, likes, and engagement rates before and after each campaign ran.
+            Unedited metrics pulled straight from real YouTube Studio dashboards — verified views and likes before and after each campaign ran.
           </p>
         </div>
 
@@ -89,8 +89,8 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
           ))}
         </div>
 
-        {/* Cases Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Cases Grid — 2 columns so proof screenshots stay large and legible */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {visibleCases.map((c, idx) => (
             <article
               key={`${c.t}-${idx}`}
@@ -157,11 +157,8 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
 
                 {/* Footer Badges */}
                 <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                  <span
-                    className="text-[11px] font-mono text-slate-400"
-                    title="Engagement rate often dips as paid reach scales beyond a video's core audience — absolute likes and views still grow."
-                  >
-                    ER: {c.ber} → {c.aer}
+                  <span className="text-[11px] font-mono text-slate-500">
+                    YouTube Studio screenshot
                   </span>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)]">
                     {c.g} views
@@ -184,11 +181,6 @@ export default function CaseStudies({ onOpenBooking }: CaseStudiesProps) {
             </button>
           </div>
         )}
-
-        {/* Engagement-rate context note */}
-        <p className="mt-8 text-center text-[11px] font-mono text-slate-500 max-w-2xl mx-auto leading-relaxed">
-          Note: engagement rate (likes ÷ views) often moderates as a campaign scales reach beyond a video&apos;s core audience — absolute likes and views still grow, which is what compounds algorithmic momentum.
-        </p>
 
         {/* Lightbox Modal */}
         <LightboxModal
