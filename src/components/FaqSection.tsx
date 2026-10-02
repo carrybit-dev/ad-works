@@ -54,7 +54,7 @@ export default function FaqSection() {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs mb-4">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>09 · QUESTIONS &amp; ANSWERS</span>
+            <span>10 · QUESTIONS &amp; ANSWERS</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
             Frequently Asked <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">Questions</span>
