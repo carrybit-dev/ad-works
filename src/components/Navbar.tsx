@@ -23,8 +23,8 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
 
   const navLinks = [
     { name: 'AI Audit', href: '#scanner' },
-    { name: 'Bento Engine', href: '#bento' },
-    { name: 'Spillover ROI', href: '#spillover' },
+    { name: 'Engine', href: '#bento' },
+    { name: 'Results', href: '#spillover' },
     { name: 'Proofs', href: '#proofs' },
     { name: 'Pricing', href: '#pricing' },
     { name: 'Tracker', href: '#tracker' },
@@ -68,7 +68,7 @@ export default function Navbar({ onOpenBooking, onOpenCommandMenu }: NavbarProps
                   FARDIN AD WORKS
                 </span>
                 <span className="text-[10px] font-mono text-[#FF7A50] tracking-wider uppercase font-semibold">
-                  SaaS YouTube Growth
+                  YouTube Promotion
                 </span>
               </div>
             </a>
