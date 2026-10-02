@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Check, ArrowRight, Zap, ExternalLink } from 'lucide-react';
+import { Check, ArrowRight, Zap, ExternalLink, ShieldCheck, Target } from 'lucide-react';
 import { FIVERR_GIG_URL } from '@/data/links';
 
 interface PricingTiersProps {
@@ -181,6 +181,27 @@ export default function PricingTiers({ onOpenBooking }: PricingTiersProps) {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Booking protection — trust strip, grounded in /refund policy */}
+        <div className="mt-10 rounded-2xl border border-white/10 bg-[#0E131E]/85 px-6 py-5 sm:px-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+          <div className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-200">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span><strong className="text-white font-semibold">Full refund</strong> if you cancel before launch</span>
+          </div>
+          <div className="hidden sm:block w-px h-8 bg-white/10" />
+          <div className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-200">
+            <Target className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span><strong className="text-white font-semibold">Under-delivery remedy</strong> — below 80% of views? free extension or credit</span>
+          </div>
+          <div className="hidden sm:block w-px h-8 bg-white/10" />
+          <a
+            href="/refund"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#FF8A66] hover:text-white transition-colors whitespace-nowrap"
+          >
+            Read refund policy
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
         </div>
 
         {/* Fiverr alternative — secondary trust path, keeps direct booking primary */}
