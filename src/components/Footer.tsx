@@ -72,7 +72,7 @@ export default function Footer({ onOpenBooking }: FooterProps) {
             <div className="pt-2">
               <span className="font-mono text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full inline-flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Google Ads Partner Compliant</span>
+                <span>Google Ads Compliant</span>
               </span>
             </div>
           </div>
