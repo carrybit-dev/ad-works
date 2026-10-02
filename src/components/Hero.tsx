@@ -16,6 +16,19 @@ export default function Hero({ onOpenBooking }: HeroProps) {
           
           {/* Left Hero Column */}
           <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
+            {/* Founder chip — real face above the fold */}
+            <div className="flex items-center gap-3 mb-6 animate-fadeIn">
+              <img
+                src="/fardin-tareque.png"
+                alt="Fardin Tareque"
+                className="w-11 h-11 rounded-full object-cover border-2 border-[#FF4229]/60 shadow-[0_0_18px_rgba(255,66,41,0.35)]"
+              />
+              <div>
+                <div className="text-sm font-bold text-white leading-tight">Hi, I&apos;m Fardin.</div>
+                <div className="text-[11px] text-slate-400 font-mono">Founder, Fardin Ad Works</div>
+              </div>
+            </div>
+
             {/* Top eyebrow badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF4229]/10 border border-[#FF4229]/30 text-[#FFA58A] font-mono text-xs mb-6 backdrop-blur-md animate-fadeIn">
               <Sparkles className="w-3.5 h-3.5 text-[#FF6647]" />
