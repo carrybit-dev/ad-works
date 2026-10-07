@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://fardintareque.com';
+  const baseUrl = 'https://www.fardintareque.com';
 
   // Only canonical URLs belong in a sitemap — fragments (#pricing, #proofs,
   // …) are not separate indexable URLs and are ignored by crawlers.
