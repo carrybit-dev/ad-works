@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://fardintareque.com'),
+  metadataBase: new URL('https://www.fardintareque.com'),
   applicationName: 'Fardin Ad Works',
   title: {
     default: 'Fardin Ad Works | Targeted YouTube Video Promotion',
@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   description:
     'Laser-focused Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators. 100% YouTube TOS safe.',
   alternates: {
-    canonical: 'https://fardintareque.com',
+    canonical: 'https://www.fardintareque.com',
   },
   openGraph: {
     title: 'Fardin Ad Works | Targeted YouTube Video Promotion',
     description:
       'Laser-focused Google Ads campaigns driving authentic, retention-backed views, watch hours, and subscribers for creators.',
-    url: 'https://fardintareque.com',
+    url: 'https://www.fardintareque.com',
     siteName: 'Fardin Ad Works',
     locale: 'en_US',
     type: 'website',
@@ -43,20 +43,20 @@ export default function RootLayout({
     '@graph': [
       {
         '@type': 'WebSite',
-        '@id': 'https://fardintareque.com/#website',
-        url: 'https://fardintareque.com',
+        '@id': 'https://www.fardintareque.com/#website',
+        url: 'https://www.fardintareque.com',
         name: 'Fardin Ad Works',
         description: 'Targeted Google Ads YouTube Video Promotion & Algorithmic Growth',
         publisher: {
-          '@id': 'https://fardintareque.com/#person',
+          '@id': 'https://www.fardintareque.com/#person',
         },
       },
       {
         '@type': 'Organization',
-        '@id': 'https://fardintareque.com/#organization',
+        '@id': 'https://www.fardintareque.com/#organization',
         name: 'Fardin Ad Works',
-        url: 'https://fardintareque.com',
-        logo: 'https://fardintareque.com/fardin-ad-works-logo.png',
+        url: 'https://www.fardintareque.com',
+        logo: 'https://www.fardintareque.com/fardin-ad-works-logo.png',
         sameAs: [
           'https://bd.linkedin.com/in/fardintareque',
           'https://www.instagram.com/fardin_tareque_/',
@@ -65,9 +65,9 @@ export default function RootLayout({
       },
       {
         '@type': 'Person',
-        '@id': 'https://fardintareque.com/#person',
+        '@id': 'https://www.fardintareque.com/#person',
         name: 'Fardin Tareque',
-        url: 'https://fardintareque.com',
+        url: 'https://www.fardintareque.com',
         jobTitle: 'YouTube Video Promotion Specialist',
         sameAs: [
           'https://bd.linkedin.com/in/fardintareque',
@@ -79,25 +79,25 @@ export default function RootLayout({
         '@type': 'SiteNavigationElement',
         name: 'Promotion Pricing ($20 - $105)',
         description: 'Transparent campaign tiers: Starter $20, Growth $45, and Advanced $105.',
-        url: 'https://fardintareque.com/#pricing',
+        url: 'https://www.fardintareque.com/#pricing',
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Verified Case Studies',
         description: 'Real audience proof and YouTube Studio analytics verification.',
-        url: 'https://fardintareque.com/#proofs',
+        url: 'https://www.fardintareque.com/#proofs',
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Live Order Tracker',
         description: 'Track real-time Google Ads campaign progress and delivery percentages.',
-        url: 'https://fardintareque.com/#tracker',
+        url: 'https://www.fardintareque.com/#tracker',
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'AI Channel Scanner',
         description: 'Instant YouTube channel and video compliance audit before booking.',
-        url: 'https://fardintareque.com/#audit',
+        url: 'https://www.fardintareque.com/#audit',
       },
       {
         '@type': 'Product',
@@ -115,7 +115,7 @@ export default function RootLayout({
             price: '20.00',
             priceCurrency: 'USD',
             availability: 'https://schema.org/InStock',
-            url: 'https://fardintareque.com/#pricing',
+            url: 'https://www.fardintareque.com/#pricing',
           },
           {
             '@type': 'Offer',
@@ -123,7 +123,7 @@ export default function RootLayout({
             price: '45.00',
             priceCurrency: 'USD',
             availability: 'https://schema.org/InStock',
-            url: 'https://fardintareque.com/#pricing',
+            url: 'https://www.fardintareque.com/#pricing',
           },
           {
             '@type': 'Offer',
@@ -131,7 +131,7 @@ export default function RootLayout({
             price: '105.00',
             priceCurrency: 'USD',
             availability: 'https://schema.org/InStock',
-            url: 'https://fardintareque.com/#pricing',
+            url: 'https://www.fardintareque.com/#pricing',
           },
         ],
       },
