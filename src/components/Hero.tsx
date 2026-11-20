@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { ArrowRight, ShieldCheck, CheckCircle2, Sparkles } from 'lucide-react';
 import StudioMockup from './StudioMockup';
 
@@ -18,9 +19,11 @@ export default function Hero({ onOpenBooking }: HeroProps) {
           <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
             {/* Founder chip — real face above the fold */}
             <div className="flex items-center gap-3 mb-6 animate-fadeIn">
-              <img
+              <Image
                 src="/fardin-tareque.png"
                 alt="Fardin Tareque"
+                width={96}
+                height={96}
                 className="w-11 h-11 rounded-full object-cover border-2 border-[#FF4229]/60 shadow-[0_0_18px_rgba(255,66,41,0.35)]"
               />
               <div>
